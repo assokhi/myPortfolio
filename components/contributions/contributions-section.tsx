@@ -1,5 +1,5 @@
 import { getGithub } from "@/lib/stats";
-import { ContributionHeatmap } from "./contribution-heatmap";
+import { ContributionActivity3D } from "./contribution-activity-3d";
 import { LanguageDistribution } from "./language-distribution";
 import { GithubActivity } from "./github-activity";
 
@@ -28,7 +28,7 @@ export default async function ContributionsSection() {
       </p>
 
       <div className="mt-6">
-        <ContributionHeatmap weeks={calendar} total={contributionsLastYear ?? 0} />
+        <ContributionActivity3D weeks={calendar} total={contributionsLastYear ?? 0} />
       </div>
 
       {(languages.length > 0 || activity) && (
