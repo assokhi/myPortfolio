@@ -35,6 +35,10 @@ export const githubGraphqlRaw = z.object({
             }),
           ),
         }),
+        totalCommitContributions: z.number(),
+        totalIssueContributions: z.number(),
+        totalPullRequestContributions: z.number(),
+        totalPullRequestReviewContributions: z.number(),
       }),
     }),
   }),
@@ -61,6 +65,20 @@ export const githubStats = z.object({
   calendar: z.array(
     z.array(z.object({ date: z.string(), count: z.number() })),
   ),
+  /** Commit/issue/PR/review totals from the same GraphQL call as the
+   *  calendar — null under the same no-token condition. */
+  activity: z
+    .object({
+      commits: z.number(),
+      issues: z.number(),
+      pullRequests: z.number(),
+      reviews: z.number(),
+      repositories: z.number(),
+    })
+    .nullable(),
+  /** Bytes of code per language across owned, non-fork repos, sorted
+   *  descending, with everything past the top slice folded into "Other". */
+  languages: z.array(z.object({ name: z.string(), bytes: z.number(), percent: z.number() })),
 });
 export type GithubStats = z.infer<typeof githubStats>;
 
