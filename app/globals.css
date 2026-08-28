@@ -1,0 +1,391 @@
+@import "tailwindcss";
+
+/* Design tokens. Dark-only on purpose: one palette means one contrast audit.
+   Every pair below is >= 4.5:1 against --color-bg. */
+@theme {
+  --color-bg: #0a0a0b;
+  --color-surface: #141417;
+  --color-border: #26262b;
+  --color-fg: #ededef;        /* 16.5:1 */
+  --color-muted: #a2a2ad;     /*  7.6:1 */
+  --color-accent: #ffffff;    /* 20.4:1 */
+  --color-accent-2: #a78bfa;  /*  6.6:1 */
+  /* Bento highlight fills. These are card BACKGROUNDS, never text colours —
+     type on them is --color-bg, which is 15:1 on the lime and 12:1 on the
+     mint. Two pops of colour in a dark grid; a third would be a rainbow. */
+  --color-lime: #d8f14b;
+  --color-mint: #3fe0a3;
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  /* Body copy is set in Times New Roman. It is a system font on every target
+     platform, so this costs no webfont request. */
+  --font-serif: "Times New Roman", Times, Georgia, serif;
+  /* Display script. Great Vibes is the OFL stand-in for Geraldine, which is
+     licensed for personal use only and is not on Google Fonts — see the note
+     in components/sections/About.tsx before swapping it. Headline sizes only:
+     a connected script is unreadable below about 2rem. */
+  --font-script: var(--font-great-vibes), "Brush Script MT", cursive;
+
+}
+
+html {
+  scroll-behavior: smooth;
+  /* No scroll-padding-top. Every #anchor here is a full-width section whose own
+     top padding already clears the 76px header pill, and the home page's
+     sections sit on an opaque sheet that slides over a pinned hero -- any
+     padding here scrolls short of the sheet's top edge and leaves a strip of
+     hero showing above the section you asked for. */
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Focus is never invisible. Applies to every interactive element site-wide. */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Global motion kill-switch. Components still guard individually, but this
+   catches anything pasted in from a registry that forgot to. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* --- Reveal on scroll ---------------------------------------------------
+   Scroll-driven CSS animation: no JS, no hydration, nothing to hydrate late.
+   The default state is visible; the hidden start state only exists inside the
+   @supports block, so a browser without scroll timelines shows content
+   immediately rather than showing nothing. */
+.reveal {
+  opacity: 1;
+}
+
+@supports (animation-timeline: view()) {
+  .reveal {
+    opacity: 0;
+    animation: reveal-up linear both;
+    animation-timeline: view();
+    animation-range: entry 5% cover 22%;
+  }
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* A fade-in that never fades in leaves an invisible element — worse than the
+   animation. Under reduced motion the reveal is removed, not shortened. */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* --- Hero parallax -------------------------------------------------------
+   The hero pins with `position: sticky` and the rest of the page slides up
+   over it. That part is plain CSS and works everywhere, Firefox included.
+
+   The recede below is a progressive enhancement on top: per MDN's compat data
+   `animation-timeline` is Chrome 115+, Safari 26+, but still preview-only in
+   Firefox, so it must never be load-bearing. Without it you still get the
+   parallax, just no fade. */
+.hero-recede {
+  opacity: 1;
+}
+
+@supports (animation-timeline: scroll()) {
+  .hero-recede {
+    animation: hero-recede linear both;
+    animation-timeline: scroll(root block);
+    animation-range: 0 70vh;
+  }
+}
+
+@keyframes hero-recede {
+  to {
+    opacity: 0.2;
+    transform: scale(0.96) translateY(-1.5rem);
+  }
+}
+
+/* Scroll-driven animations ignore animation-duration, so the global
+   reduced-motion rule above does NOT stop them. Both the fade and the pinning
+   have to be switched off explicitly — scroll-linked movement is exactly what
+   motion sensitivity struggles with. */
+@media (prefers-reduced-motion: reduce) {
+  /* `relative`, not `static`: static would stop the hero being a containing
+     block, so its absolutely-positioned background would escape the section
+     and its overflow-hidden, pushing the page sideways. relative un-pins it
+     just the same. */
+  .hero-sticky {
+    position: relative !important;
+  }
+  .hero-recede {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* --- FadeInText no-JS fallback ------------------------------------------
+   The words are server-rendered with an inline `opacity: 0` that only Motion
+   clears. With scripting off that never happens and the hero text is
+   invisible, so paint the end state instead. Same reasoning as `.reveal`
+   above: a fade-in that cannot run must not hide the content. */
+@media (scripting: none) {
+  [data-fade-in] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* --- Scroll cue ----------------------------------------------------------
+   The dot that falls down the mouse wheel at the bottom of the hero. Pure CSS
+   so the hero needs no client boundary and nothing keeps a JS loop alive. */
+.scroll-cue-dot {
+  animation: scroll-cue-dot 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes scroll-cue-dot {
+  0%, 15% { opacity: 0; transform: translateY(0); }
+  35% { opacity: 1; }
+  70%, 100% { opacity: 0; transform: translateY(0.75rem); }
+}
+
+/* An infinitely looping element is exactly what motion sensitivity struggles
+   with, and the global kill-switch above only shortens it — which would leave
+   the dot parked at the bottom of its travel, invisible. Stop it outright. */
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue-dot {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* --- About mascot --------------------------------------------------------
+   Three loops on one small SVG: the body hops, the eyes blink, the antenna
+   sparks. Pure CSS for the same reason as the scroll cue — no client boundary,
+   no JS loop for the life of the page.
+
+   transform-box: fill-box is not optional on SVG children: without it the
+   transform origin is the SVG viewport corner, not the shape, and the eyes
+   blink sideways out of the face. */
+.mascot-bob,
+.mascot-blink,
+.mascot-spark,
+.mascot-shadow {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.mascot-bob {
+  animation: mascot-bob 2.6s ease-in-out infinite;
+}
+.mascot-shadow {
+  animation: mascot-shadow 2.6s ease-in-out infinite;
+}
+.mascot-blink {
+  animation: mascot-blink 5s ease-in-out infinite;
+}
+.mascot-spark {
+  animation: mascot-spark 2.6s ease-in-out infinite;
+}
+
+@keyframes mascot-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes mascot-shadow {
+  0%, 100% { transform: scaleX(1); opacity: 1; }
+  50% { transform: scaleX(0.82); opacity: 0.6; }
+}
+
+/* Held open for most of the cycle — a blink that is a smooth ease reads as a
+   sleepy droop, so the closed state is two narrow keyframe steps. */
+@keyframes mascot-blink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  95%, 97% { transform: scaleY(0.1); }
+}
+
+@keyframes mascot-spark {
+  0%, 100% { opacity: 0.55; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+
+/* Same reasoning as the scroll cue: the global kill-switch only shortens
+   animations, which would freeze the mascot mid-blink with its eyes shut. */
+@media (prefers-reduced-motion: reduce) {
+  .mascot-bob,
+  .mascot-blink,
+  .mascot-spark,
+  .mascot-shadow {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* --- Explore button ------------------------------------------------------
+   A conic gradient rotating around a 1px border, plus a slow ring that pulses
+   outward to draw the eye to it. Both are CSS: no client boundary, no RAF loop
+   running for the life of the page.
+
+   @property is what makes an angle animatable at all — a plain custom property
+   is a string to the animation engine and would jump from 0deg to 360deg with
+   nothing in between. */
+@property --explore-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.explore-btn {
+  border: 1px solid transparent;
+  /* The fallback angle matters: in a browser without @property the whole
+     conic-gradient would otherwise be invalid and the button would lose its
+     border entirely. With it, the gradient renders — just without rotating. */
+  background:
+    linear-gradient(var(--color-surface), var(--color-surface)) padding-box,
+    conic-gradient(
+        from var(--explore-angle, 0deg),
+        transparent 0deg,
+        var(--color-accent-2) 70deg,
+        var(--color-accent) 120deg,
+        transparent 190deg,
+        transparent 360deg
+      )
+      border-box;
+  animation: explore-spin 4s linear infinite;
+}
+
+.explore-btn::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  animation: explore-pulse 3.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.explore-btn:hover {
+  animation-duration: 1.4s;
+}
+
+@keyframes explore-spin {
+  to {
+    --explore-angle: 360deg;
+  }
+}
+
+/* Long dead stretch, then one quick outward ring — a continuous pulse reads as
+   a loading state rather than an invitation. */
+@keyframes explore-pulse {
+  0%, 70% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-accent-2) 55%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 10px transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .explore-btn,
+  .explore-btn::after {
+    animation: none !important;
+  }
+  .explore-btn::after {
+    box-shadow: none !important;
+  }
+}
+
+/* --- Experience marquee --------------------------------------------------
+   One slow loop of the roles, drifting left to right. Pure CSS: no client
+   boundary, no RAF loop, and nothing to hydrate.
+
+   The track holds THREE copies of the list and travels exactly one copy width
+   (-33.3333% -> 0), which is what makes the wrap seamless.
+
+   One copy must be WIDER than the strip, or the same role shows up twice on
+   screen at once. With three roles that is a card-width problem, not a copy
+   count problem: see the w-[26rem] on the lg tiles in Experience.tsx, which
+   puts one copy at 1296px against a 1280px container. The mask below covers
+   the remaining sliver.
+
+   The side fade is a mask, not an overlay gradient: an overlay would have to
+   match the page background, and this section sits on a sheet that slides over
+   the hero, so there is no single colour to match. */
+.marquee {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 14%,
+    #000 86%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 14%,
+    #000 86%,
+    transparent
+  );
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-drift 90s linear infinite;
+}
+
+/* Hovering is a request to read the thing, so let it be read. */
+.marquee:hover .marquee-track,
+.marquee:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes marquee-drift {
+  from {
+    transform: translateX(-33.3333%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Same reasoning as the scroll cue: the global kill-switch only shortens an
+   animation, which here would freeze the track mid-travel with the first copy
+   parked off-screen. Stop it outright and hand the strip back to the user as
+   something they scroll themselves. */
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    overflow-x: auto;
+  }
+  .marquee-track {
+    animation: none !important;
+    transform: none !important;
+  }
+}

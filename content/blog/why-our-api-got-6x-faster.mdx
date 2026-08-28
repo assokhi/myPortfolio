@@ -1,0 +1,37 @@
+---
+title: Why our API got 6x faster
+date: 2026-08-01
+summary: One index, one bad query, and a lesson about ORMs.
+tags: [postgres, performance]
+---
+
+The dashboard took 820ms to answer. Users called it "the loading screen".
+It now answers in 130ms, and the fix was smaller than the meeting about it.
+
+## What was actually slow
+
+The endpoint fetched a list of accounts, then — inside a loop — fetched each
+account's latest invoice. Forty accounts meant forty-one queries. The ORM made
+that invisible: the code read like a single expression.
+
+```ts
+const accounts = await db.account.findMany({ where: { orgId } });
+for (const a of accounts) {
+  a.latestInvoice = await db.invoice.findFirst({
+    where: { accountId: a.id },
+    orderBy: { issuedAt: "desc" },
+  });
+}
+```
+
+## What fixed it
+
+One query with a lateral join, and one index on
+`invoice (account_id, issued_at desc)`. The planner went from forty index scans
+plus round-trip latency to a single pass.
+
+## The lesson
+
+An ORM hides the number of queries, not the cost of them. Before optimising
+anything, turn on query logging and count. The slow thing is usually not the
+thing you were staring at.

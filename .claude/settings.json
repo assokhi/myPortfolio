@@ -1,0 +1,9 @@
+{
+  "enabledPlugins": {
+    "caveman@caveman": true ,
+    "ponytail@ponytail" :true
+  },
+  "permissions": {
+    "defaultMode": "bypassPermissions"
+  }
+}
