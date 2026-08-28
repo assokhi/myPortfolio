@@ -2,7 +2,7 @@ import { skills } from "@/content/skills";
 import Section from "./Section";
 import { BrandMark } from "@/components/ui/tech-icon";
 import ShowMore from "@/components/ui/show-more";
-import ContributionsSection from "@/components/contributions/contributions-section";
+import ContributionCalendar from "./ContributionCalendar";
 import BoldOnHover from "@/components/ui/bold-on-hover";
 
 export function StacksList() {
@@ -60,7 +60,7 @@ export default function Skills() {
     <Section id="skills" title="Skills">
       <TechnologiesList />
 
-      <ContributionsSection />
+      <ContributionCalendar />
 
       <div className="mt-8 flex justify-center">
         <ShowMore href="/skills" />

@@ -36,10 +36,6 @@ const CONTRIBUTIONS_QUERY = `
           totalContributions
           weeks { contributionDays { date contributionCount } }
         }
-        totalCommitContributions
-        totalIssueContributions
-        totalPullRequestContributions
-        totalPullRequestReviewContributions
       }
     }
   }`;
@@ -47,17 +43,10 @@ const CONTRIBUTIONS_QUERY = `
 type Calendar = {
   total: number;
   weeks: { date: string; count: number }[][];
-  activity: {
-    commits: number;
-    issues: number;
-    pullRequests: number;
-    reviews: number;
-  };
 };
 
-/** The contribution calendar and activity totals are only reachable through
- *  GraphQL, and only with a token. No token means neither — not a failed
- *  section. */
+/** The contribution calendar is only reachable through GraphQL, and only with a
+ *  token. No token means no calendar — not a failed section. */
 async function contributions(login: string): Promise<Calendar | null> {
   const token = process.env.GITHUB_TOKEN;
   if (!token) return null;
@@ -71,8 +60,9 @@ async function contributions(login: string): Promise<Calendar | null> {
       body: JSON.stringify({ query: CONTRIBUTIONS_QUERY, variables: { login } }),
       revalidate: HOUR,
     });
-    const collection = githubGraphqlRaw.parse(raw).data.user.contributionsCollection;
-    const cal = collection.contributionCalendar;
+    const cal =
+      githubGraphqlRaw.parse(raw).data.user.contributionsCollection
+        .contributionCalendar;
     return {
       total: cal.totalContributions,
       weeks: cal.weeks.map((w) =>
@@ -81,55 +71,10 @@ async function contributions(login: string): Promise<Calendar | null> {
           count: d.contributionCount,
         })),
       ),
-      activity: {
-        commits: collection.totalCommitContributions,
-        issues: collection.totalIssueContributions,
-        pullRequests: collection.totalPullRequestContributions,
-        reviews: collection.totalPullRequestReviewContributions,
-      },
     };
   } catch {
     return null;
   }
-}
-
-/** Bytes of code per language across a set of repos, aggregated from GitHub's
- *  per-repo /languages endpoint (the only place byte-weighted breakdowns
- *  exist — the repo list's own `language` field is just the primary one).
- *  Folds every language past the top 4 into "Other" so the legend stays
- *  short regardless of how many languages a repo history touches. */
-async function languageBreakdown(
-  login: string,
-  repoNames: string[],
-  headers: Record<string, string>,
-): Promise<{ name: string; bytes: number; percent: number }[]> {
-  const totals = new Map<string, number>();
-  const results = await Promise.allSettled(
-    repoNames.map((name) =>
-      fetchJson<Record<string, number>>(
-        `https://api.github.com/repos/${login}/${name}/languages`,
-        { headers, revalidate: HOUR },
-      ),
-    ),
-  );
-  for (const r of results) {
-    if (r.status !== "fulfilled") continue;
-    for (const [lang, bytes] of Object.entries(r.value)) {
-      totals.set(lang, (totals.get(lang) ?? 0) + bytes);
-    }
-  }
-
-  const sorted = [...totals.entries()].sort((a, b) => b[1] - a[1]);
-  const top = sorted.slice(0, 4);
-  const otherBytes = sorted.slice(4).reduce((n, [, b]) => n + b, 0);
-  if (otherBytes > 0) top.push(["Other", otherBytes]);
-
-  const grandTotal = top.reduce((n, [, b]) => n + b, 0) || 1;
-  return top.map(([name, bytes]) => ({
-    name,
-    bytes,
-    percent: Math.round((bytes / grandTotal) * 100),
-  }));
 }
 
 /** Achievement badges (Pull Shark, Pair Extraordinaire, ...). GitHub exposes
@@ -187,11 +132,6 @@ export async function getGithub(): Promise<ApiResult<GithubStats>> {
 
     const user = githubUserRaw.parse(userRaw);
     const owned = githubRepoRaw.array().parse(reposRaw).filter((r) => !r.fork);
-    const languages = await languageBreakdown(
-      login,
-      owned.map((r) => r.name),
-      headers,
-    );
 
     return {
       ok: true,
@@ -201,10 +141,6 @@ export async function getGithub(): Promise<ApiResult<GithubStats>> {
         totalStars: owned.reduce((n, r) => n + r.stargazers_count, 0),
         contributionsLastYear: calendar?.total ?? null,
         calendar: calendar?.weeks ?? [],
-        activity: calendar
-          ? { ...calendar.activity, repositories: user.public_repos }
-          : null,
-        languages,
         profileUrl: user.html_url,
         achievements: badges,
         topRepos: owned
