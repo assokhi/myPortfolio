@@ -15,7 +15,7 @@ export default async function Home() {
       {/* Opaque and above the hero: this is the sheet that slides up over the
           pinned hero. Without a solid background you would see straight
           through it. */}
-      <div className="relative z-10 bg-bg shadow-[0_-32px_64px_-16px_rgba(0,0,0,0.9)]">
+      <div className="relative z-10 bg-bg shadow-[0_-32px_64px_-16px_var(--sheet-shadow)]">
         <About />
         <Experience />
         <Skills />

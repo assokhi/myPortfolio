@@ -169,7 +169,7 @@ export default function TechIcon({
           against the page. It scales on hover because hovering it does
           something — the name appears above it. The global
           prefers-reduced-motion rule zeroes the duration. */}
-      <div className="flex size-12 items-center justify-center rounded-xl border border-white/[0.08] bg-white/5 transition-all duration-200 group-hover/tech:scale-105 group-hover/tech:border-white/20 group-hover/tech:shadow-lg group-hover/tech:shadow-black/40 sm:size-14">
+      <div className="flex size-12 items-center justify-center rounded-xl border border-ink/[0.08] bg-ink/5 transition-all duration-200 group-hover/tech:scale-105 group-hover/tech:border-ink/20 group-hover/tech:shadow-lg group-hover/tech:shadow-black/40 sm:size-14">
         <BrandMark name={name} className="size-6 sm:size-7" />
       </div>
 

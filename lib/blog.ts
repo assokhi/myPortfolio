@@ -5,13 +5,20 @@ import type { PostMeta } from "@/content/types";
 
 const BLOG_DIR = path.join(process.cwd(), "content", "blog");
 
-function toMeta(slug: string, data: Record<string, unknown>): PostMeta {
+function toMeta(
+  slug: string,
+  data: Record<string, unknown>,
+  body: string,
+): PostMeta {
   return {
     slug,
     title: String(data.title ?? slug),
     date: String(data.date ?? ""),
     summary: String(data.summary ?? ""),
     tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
+    // 220 wpm, rounded up: a "1 min read" badge only needs to be roughly right.
+    readingTime: Math.max(1, Math.ceil(body.trim().split(/\s+/).length / 220)),
+    cover: data.cover ? String(data.cover) : undefined,
   };
 }
 
@@ -31,7 +38,8 @@ export async function getPosts(): Promise<PostMeta[]> {
       .map(async (file) => {
         const slug = file.replace(/\.mdx?$/, "");
         const raw = await readFile(path.join(BLOG_DIR, file), "utf8");
-        return toMeta(slug, matter(raw).data);
+        const { data, content } = matter(raw);
+        return toMeta(slug, data, content);
       }),
   );
 
@@ -49,7 +57,7 @@ export async function getPost(
     try {
       const raw = await readFile(path.join(BLOG_DIR, slug + ext), "utf8");
       const { data, content } = matter(raw);
-      return { meta: toMeta(slug, data), body: content };
+      return { meta: toMeta(slug, data, content), body: content };
     } catch {
       // try the next extension
     }

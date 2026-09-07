@@ -13,6 +13,8 @@ export default function Section({
   action,
   titleClassName,
   introClassName,
+  headerClassName,
+  className,
   children,
 }: {
   id: string;
@@ -27,15 +29,22 @@ export default function Section({
    *  the shared script/serif look. */
   titleClassName?: string;
   introClassName?: string;
+  /** Overrides the header's bottom margin (default `mb-8`). Skills uses a
+   *  tighter gap to keep the whole section on one screen. */
+  headerClassName?: string;
+  /** Overrides the outer section's vertical padding (default `py-16
+   *  lg:py-20`). Skills uses a tighter pad to keep the whole section on one
+   *  screen. */
+  className?: string;
   children: ReactNode;
 }) {
   return (
     <section
       id={id}
       aria-labelledby={`${id}-heading`}
-      className="reveal mx-auto max-w-7xl px-4 py-16 md:px-12 lg:px-24 lg:py-20"
+      className={cn("reveal mx-auto max-w-7xl px-4 md:px-12 lg:px-24", className ?? "py-16 lg:py-20")}
     >
-      <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+      <div className={cn("flex flex-wrap items-end justify-between gap-4", headerClassName ?? "mb-8")}>
         <div>
           <h2 id={`${id}-heading`} className={cn(displayHeading, titleClassName)}>
             {title}

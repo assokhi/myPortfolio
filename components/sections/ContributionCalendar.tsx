@@ -4,29 +4,35 @@ import { profile } from "@/content/profile";
  *  Action (.github/workflows/github-profile-3d-contrib.yml) — it commits a
  *  fresh SVG to this repo daily. Pulled straight from GitHub's raw CDN, so the
  *  image self-updates without a site redeploy. */
-const SKYLINE_URL = `https://raw.githubusercontent.com/${profile.githubUsername}/myPortfolio/main/profile-3d-contrib/profile-night-view.svg`;
+const SKYLINE = (view: string) =>
+  `https://raw.githubusercontent.com/${profile.githubUsername}/myPortfolio/main/profile-3d-contrib/${view}.svg`;
 
 export default function ContributionCalendar() {
   return (
-    <section aria-labelledby="contributions-heading" className="mt-10">
-      <h3
-        id="contributions-heading"
-        className="mb-4 text-sm font-semibold uppercase tracking-[0.1em] text-muted"
-      >
-        Contributions
-      </h3>
-
+    <section aria-label="Contributions" className="mt-2">
       <a
         href={`https://github.com/${profile.githubUsername}`}
         target="_blank"
         rel="noreferrer"
-        className="mx-auto block max-w-md overflow-hidden rounded-2xl border border-white/[0.08] bg-white/5 transition-colors duration-200 hover:border-white/20"
+        className="mx-auto block max-w-2xl opacity-90 transition-opacity duration-200 hover:opacity-100"
       >
+        {/* Two renders of the same data: the Action commits a night view and
+            a light-ground green one. The theme is a CSS attribute, not React
+            state, so the swap has to be CSS too. Both are lazy and only one is
+            ever displayed, so the hidden one is never fetched. Both carry the
+            same alt: display:none takes the other out of the accessibility
+            tree, so the chart is announced once whichever theme is on. */}
         <img
-          src={SKYLINE_URL}
+          src={SKYLINE("profile-night-view")}
           alt={`3D visualization of ${profile.githubUsername}'s GitHub commit history over the last year, with a breakdown of commits, issues, pull requests, reviews and repositories, and languages used`}
           loading="lazy"
-          className="w-full"
+          className="w-full light:hidden [mask-image:radial-gradient(ellipse_at_center,black_60%,transparent_100%)]"
+        />
+        <img
+          src={SKYLINE("profile-green")}
+          alt={`3D visualization of ${profile.githubUsername}'s GitHub commit history over the last year, with a breakdown of commits, issues, pull requests, reviews and repositories, and languages used`}
+          loading="lazy"
+          className="w-full night:hidden [mask-image:radial-gradient(ellipse_at_center,black_60%,transparent_100%)]"
         />
       </a>
     </section>

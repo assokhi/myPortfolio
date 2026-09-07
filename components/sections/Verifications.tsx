@@ -15,11 +15,11 @@ import { cn } from "@/lib/utils";
  *  hairline edge, so the column reads as raised without adding a third surface
  *  colour to the palette. */
 const card =
-  "rounded-2xl border border-white/[0.08] bg-white/5 p-5 backdrop-blur-md";
+  "rounded-2xl border border-ink/[0.08] bg-ink/5 p-5 backdrop-blur-md";
 
 function Tag({ children }: { children: React.ReactNode }) {
   return (
-    <li className="rounded-md border border-white/[0.08] bg-white/5 px-2 py-1 text-[0.6875rem] font-medium text-muted">
+    <li className="rounded-md border border-ink/[0.08] bg-ink/5 px-2 py-1 text-[0.6875rem] font-medium text-muted">
       {children}
     </li>
   );
@@ -92,7 +92,7 @@ async function DsaCard() {
         <span className="text-base font-medium text-muted"> / {DSA_TARGET}</span>
       </p>
       <div
-        className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10"
+        className="mt-3 h-1.5 overflow-hidden rounded-full bg-ink/10"
         role="img"
         aria-label={`${l.total} of ${DSA_TARGET} problems solved`}
       >
@@ -139,9 +139,9 @@ function CertificationsCard() {
 function DsaSkeleton() {
   return (
     <article className={cn(card, "h-[168px]")} aria-hidden="true">
-      <div className="h-4 w-32 rounded bg-white/10" />
-      <div className="mt-4 h-7 w-24 rounded bg-white/10" />
-      <div className="mt-3 h-1.5 rounded-full bg-white/10" />
+      <div className="h-4 w-32 rounded bg-ink/10" />
+      <div className="mt-4 h-7 w-24 rounded bg-ink/10" />
+      <div className="mt-3 h-1.5 rounded-full bg-ink/10" />
     </article>
   );
 }

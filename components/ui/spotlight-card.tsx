@@ -43,7 +43,7 @@ export default function SpotlightCard({
       onMouseMove={onMouseMove}
       {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
       className={cn(
-        "group/spot relative flex items-center gap-4 overflow-hidden rounded-2xl border border-white/[0.08] bg-white/5 p-5 transition-colors duration-200 hover:border-white/20",
+        "group/spot relative flex items-center gap-4 overflow-hidden rounded-2xl border border-ink/[0.08] bg-ink/5 p-5 transition-colors duration-200 hover:border-ink/20",
         className,
       )}
     >

@@ -22,7 +22,7 @@ export default function ShowMore({
     <Link
       href={href}
       className={cn(
-        "group inline-flex items-center gap-2 rounded-full border border-border bg-surface/70 px-6 py-3 text-sm font-semibold text-fg shadow-lg shadow-black/20 transition-all duration-200 hover:-translate-y-0.5 hover:border-fg hover:bg-fg hover:text-bg hover:shadow-xl active:translate-y-0 active:scale-[0.98]",
+        "invite-pulse group inline-flex items-center gap-2 rounded-full border border-border bg-surface/70 px-6 py-3 text-sm font-semibold text-fg shadow-lg shadow-black/20 transition-all duration-200 hover:-translate-y-0.5 hover:border-fg hover:bg-fg hover:text-bg hover:shadow-xl active:translate-y-0 active:scale-[0.98]",
         className,
       )}
     >

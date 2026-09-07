@@ -56,6 +56,7 @@ function JobCell({
         <IntroPanel
           brand={job.logo ?? job.company}
           src={job.image}
+          srcLight={job.imageLight}
           fit={job.imageFit}
           alt={`${job.company} — ${job.role}`}
         />

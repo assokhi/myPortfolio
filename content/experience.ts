@@ -45,6 +45,10 @@ export const experience: Experience[] = [
     company: "Apache Software Foundation — Apache Maven",
     logo: "Apache Maven",
     image: "/experience/apache-maven.png",
+    // The official Maven logo ships a white wordmark on transparent, which
+    // disappears on the day theme's white panel. Same file with the wordmark
+    // recoloured to the ink token; the feather is untouched in both.
+    imageLight: "/experience/apache-maven-light.png",
     imageFit: "contain",
     role: "Open Source Contributor",
     start: "2026-01",

@@ -13,13 +13,15 @@ import { cn, cardSurface } from "@/lib/utils";
  *  A tone is a card FILL, never a text colour: type on the tinted tiles is
  *  --color-bg, which clears 12:1. */
 const TONES = {
-  /** The default. A white tile in a dark grid is the loudest thing on the page
-   *  without adding a colour to the palette; ink is --color-bg, 19:1. */
+  /** The default. The inverted tile: --color-fg as the fill, --color-bg as the
+   *  ink, which is 19:1 either way round. Named `white` because that is what it
+   *  is at night; by day the same pair flips to a near-black tile on a white
+   *  page, still the loudest thing in the grid and still no new colour. */
   white: {
-    card: "rounded-3xl border border-white bg-white text-bg",
-    pill: "border-bg bg-bg text-white",
-    link: "border-bg bg-bg text-white hover:bg-bg/80",
-    chip: "bg-bg text-white",
+    card: "rounded-3xl border border-fg bg-fg text-bg",
+    pill: "border-bg bg-bg text-fg",
+    link: "border-bg bg-bg text-fg hover:bg-bg/80",
+    chip: "bg-bg text-fg",
   },
   dark: {
     card: cn(cardSurface, "rounded-3xl"),

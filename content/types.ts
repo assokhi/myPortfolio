@@ -73,6 +73,11 @@ export type Experience = {
    *  "/experience/seatunnel.png". Drop a file in and it replaces the generated
    *  panel — no code change. */
   image?: string;
+  /** Same panel, for the day theme. Only needed when the logo file is drawn
+   *  for a dark ground — a white wordmark is invisible on a white page. Omit
+   *  it and `image` is used in both themes, which is right for any mark that
+   *  already reads on either. */
+  imageLight?: string;
   /** "contain" for logo files, so the generated panel stays visible behind
    *  them. Defaults to "cover", for full-bleed artwork. */
   imageFit?: "cover" | "contain";
@@ -98,6 +103,12 @@ export type Education = {
   end?: string;
   location?: string;
   notes?: string[];
+  /** Picks the row's icon. Defaults to "university" — the common case for a
+   *  portfolio, and the only reason this is optional. */
+  kind?: "university" | "school";
+  /** Path under public/, e.g. "/education/pec.png". Overrides `kind` when
+   *  set; the icon is the fallback for institutions with no logo file. */
+  logo?: string;
 };
 
 export type Certification = {
@@ -120,4 +131,9 @@ export type PostMeta = {
   date: string;
   summary: string;
   tags: string[];
+  /** Whole minutes, from the body word count. */
+  readingTime: number;
+  /** Path under public/ for the card image, e.g. "/blog/my-post.jpg". Posts
+   *  without one fall back to a flat colour block, so it stays optional. */
+  cover?: string;
 };

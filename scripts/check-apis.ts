@@ -2,8 +2,12 @@
  * Calls all five endpoints against a running server and validates each
  * response with the same schemas the routes use.
  *
- *   npm run dev            # in one terminal
- *   npm run check:apis     # in another
+ *   npm run build          # writes the four static stats JSON files to out/
+ *   npm run preview        # wrangler dev — out/ + worker.ts, port 8787
+ *   CHECK_BASE_URL=http://127.0.0.1:8787 npm run check:apis
+ *
+ * Against `npm run dev` only the four stats routes answer: /api/visitors is
+ * Worker code now (see worker.ts), not a Next route.
  *
  * This is the project's one automated check. Everything else in the portfolio
  * fails visually and cannot be asserted in a test.

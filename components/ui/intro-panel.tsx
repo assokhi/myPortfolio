@@ -10,12 +10,16 @@ import { cn } from "@/lib/utils";
 export default function IntroPanel({
   brand,
   src,
+  srcLight,
   alt,
   fit = "cover",
   className,
 }: {
   brand: string;
   src?: string;
+  /** A day-theme version of `src`, for logo files drawn for a dark ground.
+   *  Defaults to `src`, which is right for any mark that reads on either. */
+  srcLight?: string;
   alt?: string;
   fit?: "cover" | "contain";
   className?: string;
@@ -51,15 +55,26 @@ export default function IntroPanel({
       />
 
       {src ? (
-        <Image
-          src={src}
-          alt={alt ?? ""}
-          fill
-          sizes="(max-width: 768px) 100vw, 33vw"
-          className={
-            fit === "contain" ? "object-contain p-6" : "object-cover"
-          }
-        />
+        /* Two files only when the logo needs them. The theme is a CSS
+           attribute rather than React state, so the swap has to be CSS too:
+           both are lazy and exactly one is displayed, so the hidden one is
+           never fetched, and display:none keeps it out of the accessibility
+           tree — the alt is announced once either way. */
+        (srcLight && srcLight !== src ? [src, srcLight] : [src]).map(
+          (source, i, all) => (
+            <Image
+              key={source}
+              src={source}
+              alt={alt ?? ""}
+              fill
+              sizes="(max-width: 768px) 100vw, 33vw"
+              className={cn(
+                fit === "contain" ? "object-contain p-6" : "object-cover",
+                all.length === 2 && (i === 0 ? "light:hidden" : "night:hidden"),
+              )}
+            />
+          ),
+        )
       ) : (
         <div className="absolute inset-0 flex items-center justify-center px-4">
           {hex ? (

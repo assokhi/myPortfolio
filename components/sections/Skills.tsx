@@ -45,7 +45,7 @@ export function TechnologiesList() {
       {items.map((t) => (
         <li
           key={t}
-          className="flex items-center gap-1.5 rounded-lg border border-white/[0.08] bg-white/5 px-3 py-1.5 transition-all duration-200 hover:-translate-y-0.5 hover:scale-105 hover:border-white/20 hover:bg-white/10 hover:shadow-lg hover:shadow-black/40"
+          className="flex items-center gap-1.5 rounded-lg border border-ink/[0.08] bg-ink/5 px-3 py-1.5 transition-all duration-200 hover:-translate-y-0.5 hover:scale-105 hover:border-ink/20 hover:bg-ink/10 hover:shadow-lg hover:shadow-black/40"
         >
           <BrandMark name={t} className="size-4 shrink-0" />
           <span className="text-sm font-medium text-fg">{t}</span>
@@ -57,12 +57,12 @@ export function TechnologiesList() {
 
 export default function Skills() {
   return (
-    <Section id="skills" title="Skills">
+    <Section id="skills" title="Skills" headerClassName="mb-4" className="py-6 lg:py-8">
       <TechnologiesList />
 
       <ContributionCalendar />
 
-      <div className="mt-8 flex justify-center">
+      <div className="-mt-16 flex justify-end">
         <ShowMore href="/skills" />
       </div>
     </Section>

@@ -17,6 +17,9 @@
 /.next/
 /out/
 
+# cloudflare / wrangler
+.wrangler/
+
 # production
 /build
 
@@ -32,6 +35,9 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+# ...except the template, which holds names only and documents what production
+# needs. Never add a file with real values.
+!.env.example
 
 # vercel
 .vercel

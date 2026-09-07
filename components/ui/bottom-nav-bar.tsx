@@ -15,6 +15,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import ThemeToggle from "@/components/ui/theme-toggle";
 
 /* 21st.dev "Bottom Nav Bar", pasted in and edited in place. What changed and
  * why — every item here was a defect in this codebase, not a preference:
@@ -131,8 +132,8 @@ export function BottomNavBar({
         // Glass: translucent fill, blurred backdrop, a hairline edge and an
         // inner top highlight. The highlight is what sells it on a dark page,
         // where there is often too little behind the bar for blur to show.
-        "flex h-[52px] max-w-[95vw] items-center gap-1 rounded-full border border-white/10 bg-surface/50 p-2 shadow-2xl shadow-black/50 backdrop-blur-xl backdrop-saturate-150",
-        "shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08),0_16px_40px_-12px_rgba(0,0,0,0.6)]",
+        "flex h-[52px] max-w-[95vw] items-center gap-1 rounded-full border border-ink/10 bg-surface/50 p-2 shadow-2xl shadow-black/50 backdrop-blur-xl backdrop-saturate-150",
+        "shadow-[inset_0_1px_0_0_var(--glass-highlight),0_16px_40px_-12px_var(--glass-drop)]",
         stickyBottom && "fixed inset-x-0 bottom-4 z-20 mx-auto w-fit",
         className,
       )}
@@ -185,6 +186,11 @@ export function BottomNavBar({
           </Link>
         );
       })}
+
+      {/* Separated from the links: it is a control, not a destination, so it
+          must not read as an eighth nav item. */}
+      <span aria-hidden="true" className="mx-0.5 h-5 w-px shrink-0 bg-border" />
+      <ThemeToggle />
     </nav>
   );
 }

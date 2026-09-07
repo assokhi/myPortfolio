@@ -1,0 +1,20 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "portfolio",
+  "main": "worker.ts",
+  "compatibility_date": "2026-09-07",
+  // The Worker itself only handles /api/visitors; everything else is served
+  // from out/ by Static Assets, which does not count as a Worker invocation.
+  "assets": {
+    "directory": "./out",
+    "binding": "ASSETS",
+    // out/404.html, generated from app/not-found.tsx.
+    "not_found_handling": "404-page"
+  },
+  "observability": {
+    "enabled": true
+  }
+  // Secrets are NOT set here — UPSTASH_REDIS_REST_URL and
+  // UPSTASH_REDIS_REST_TOKEN are Worker secrets, set in the Cloudflare
+  // dashboard or with `npx wrangler secret put <NAME>`. See README.
+}

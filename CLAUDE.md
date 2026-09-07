@@ -9,7 +9,10 @@ content files still carry example data marked `TODO(you)`.
 
 ## Stack (decided 2026-08-23)
 
-Next.js App Router · TypeScript · Tailwind CSS · deployed to Vercel.
+Next.js App Router · TypeScript · Tailwind CSS · deployed to Cloudflare Workers
+(static export in `out/` served by Workers Static Assets, plus `worker.ts` for
+`/api/visitors` only). Push to `main` → Cloudflare Workers Builds → production;
+that is the only deployment path. Stats are baked at build time — no ISR.
 
 Chosen because [21st.dev](https://21st.dev/) and [Aceternity UI](https://ui.aceternity.com/)
 are copy-in React + Tailwind registries — they are the component source, not npm
@@ -51,10 +54,13 @@ dependencies. Paste components into `components/ui/` and own them.
 ## Commands
 
 ```bash
-npm run dev          # http://localhost:3000
-npm run build        # must pass with zero TypeScript errors
-npm run check:apis   # validates all five endpoints against a running dev server
+npm run dev          # http://localhost:3000 (no /api/visitors — that is worker.ts)
+npm run build        # static export to out/; must pass with zero TypeScript errors
+npm run preview      # wrangler dev on :8787 — out/ + worker.ts, the deployed shape
 npm run lint
+
+# all five endpoints, against `npm run preview`
+CHECK_BASE_URL=http://127.0.0.1:8787 npm run check:apis
 ```
 
 `npm run typecheck` needs `next build` to have run once — Next generates the

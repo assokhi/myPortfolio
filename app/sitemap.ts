@@ -2,11 +2,14 @@ import type { MetadataRoute } from "next";
 import { profile } from "@/content/profile";
 import { getPosts } from "@/lib/blog";
 
+// Metadata routes must opt in explicitly under `output: "export"`.
+export const dynamic = "force-static";
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = profile.siteUrl.replace(/\/$/, "");
   const now = new Date();
 
-  const pages = ["", "/about", "/experience", "/skills", "/education", "/blog"];
+  const pages = ["", "/about", "/experience", "/skills", "/blog"];
   const posts = await getPosts();
 
   return [

@@ -1,6 +1,9 @@
 import type { MetadataRoute } from "next";
 import { profile } from "@/content/profile";
 
+// Metadata routes must opt in explicitly under `output: "export"`.
+export const dynamic = "force-static";
+
 export default function robots(): MetadataRoute.Robots {
   return {
     // The whole site is meant to be read, including by ATS scrapers.

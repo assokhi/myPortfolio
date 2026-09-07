@@ -1,7 +1,19 @@
 @import "tailwindcss";
 
-/* Design tokens. Dark-only on purpose: one palette means one contrast audit.
-   Every pair below is >= 4.5:1 against --color-bg. */
+/* `light:` and `night:` — the two themes as Tailwind variants. `night:`
+   matches when data-theme is anything but "light", including absent, so it
+   agrees with the default palette before the inline script runs. Use these
+   ONLY where a token swap cannot do the job — an asset that ships in two
+   versions, or a pair of elements where exactly one must be displayed.
+   Everything else flips through the palette below and needs no variant. */
+@custom-variant light (&:where([data-theme="light"], [data-theme="light"] *));
+@custom-variant night (&:where(:root:not([data-theme="light"]), :root:not([data-theme="light"]) *));
+
+/* Design tokens. The values here are the NIGHT palette and they are also the
+   defaults: with no data-theme on <html> — no JS, or the instant before the
+   inline script in app/layout.tsx runs — the site paints its designed dark
+   look rather than a flash of white. The day palette overrides them below.
+   Every pair in both is >= 4.5:1 against its own --color-bg. */
 @theme {
   --color-bg: #0a0a0b;
   --color-surface: #141417;
@@ -15,6 +27,20 @@
      mint. Two pops of colour in a dark grid; a third would be a rainbow. */
   --color-lime: #d8f14b;
   --color-mint: #3fe0a3;
+  /* Type that sits ON lime or mint. Fixed in both themes: those two fills do
+     not flip, so their ink must not either — `text-bg` here would go white on
+     lime the moment the day theme loaded. */
+  --color-on-bright: #0a0a0b;
+  /* The bright core of the Tracing Beam gradient, flanked by --color-accent-2
+     at both ends. It has to travel in the opposite direction to the palette:
+     a violet-300 core is a highlight against a dark page and a washed-out
+     nothing against a white one. */
+  --color-beam: #c4b5fd;
+  /* Glass tint and hairline. White at night, black by day, so every
+     `bg-ink/5` and `border-ink/[0.08]` in the app inverts with the theme
+     instead of vanishing into the page. It is a colour, not an alpha: the
+     opacity modifier on each use stays where the designer put it. */
+  --color-ink: #ffffff;
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
@@ -36,6 +62,44 @@ html {
      sections sit on an opaque sheet that slides over a pinned hero -- any
      padding here scrolls short of the sheet's top edge and leaves a strip of
      hero showing above the section you asked for. */
+}
+
+/* --- Day / night ---------------------------------------------------------
+   The toggle (components/ui/theme-toggle.tsx) writes data-theme on <html> and
+   the inline script in app/layout.tsx replays it before first paint. Only the
+   tokens that actually differ are listed: everything downstream — every
+   bg-bg, text-muted, border-border, bg-ink/5 in the app — flips with them, so
+   the day theme is this block, not a second set of classes on every element.
+
+   color-scheme is not decoration: it is what tells the browser to paint
+   scrollbars, form controls and the canvas underneath in the matching shade. */
+:root {
+  color-scheme: dark;
+  /* Pure-alpha effects, which no palette colour can express: the lift under
+     the sheet that slides over the hero, and the inner top highlight that
+     sells the glass on the nav pill. Day flips the highlight from a white
+     sheen to a brighter one and pulls the drop shadow right back — a 0.9
+     black under a white page reads as a smudge, not a lift. */
+  --sheet-shadow: rgba(0, 0, 0, 0.9);
+  --glass-highlight: rgba(255, 255, 255, 0.08);
+  --glass-drop: rgba(0, 0, 0, 0.6);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --color-bg: #fbfbfc;
+  --color-surface: #f1f1f4;
+  --color-border: #dcdce2;
+  --color-fg: #17171a;        /* 17.3:1 */
+  --color-muted: #5b5b66;     /*  6.5:1 */
+  --color-accent: #0a0a0b;    /* 19.1:1 */
+  /* violet-700, not the night violet: #a78bfa is 1.8:1 on a white page. */
+  --color-accent-2: #6d28d9;  /*  6.9:1 */
+  --color-ink: #000000;
+  --color-beam: #8b5cf6;
+  --sheet-shadow: rgba(20, 20, 35, 0.12);
+  --glass-highlight: rgba(255, 255, 255, 0.75);
+  --glass-drop: rgba(20, 20, 35, 0.12);
 }
 
 body {
@@ -318,6 +382,32 @@ body {
     animation: none !important;
   }
   .explore-btn::after {
+    box-shadow: none !important;
+  }
+}
+
+/* Lighter version of the same invitation for plain pill buttons (ShowMore):
+   just the pulse ring, no spinning gradient border. Reuses explore-pulse. */
+.invite-pulse {
+  position: relative;
+}
+
+.invite-pulse::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  animation: explore-pulse 3.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.invite-pulse:hover::after {
+  animation-duration: 1.4s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .invite-pulse::after {
+    animation: none !important;
     box-shadow: none !important;
   }
 }

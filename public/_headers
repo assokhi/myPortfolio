@@ -1,0 +1,24 @@
+# Cloudflare Workers Static Assets header rules. Copied verbatim into out/ by
+# `next build`, then read by Wrangler at deploy time (it is never served).
+#
+# Next writes route-handler and metadata-route output as extension-less files
+# (out/api/github, out/opengraph-image), so Wrangler cannot infer a MIME type
+# from the filename. Without these rules the OG image is served as
+# application/octet-stream and social-card crawlers reject it.
+
+/opengraph-image
+  Content-Type: image/png
+
+# Listed one by one, not as /api/*, so a miss under /api/ still serves the
+# 404 page as HTML.
+/api/github
+  Content-Type: application/json; charset=utf-8
+
+/api/leetcode
+  Content-Type: application/json; charset=utf-8
+
+/api/codeforces
+  Content-Type: application/json; charset=utf-8
+
+/api/verifications
+  Content-Type: application/json; charset=utf-8

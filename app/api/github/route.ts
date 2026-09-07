@@ -3,7 +3,9 @@ import { getGithub } from "@/lib/stats";
 
 // Node, not Edge: this route reads a secret token.
 export const runtime = "nodejs";
-export const revalidate = 3600; // 1 hour
+// Static export: fetched once at build time and written to out/api/github.
+// Freshness comes from rebuilding, not from ISR.
+export const dynamic = "force-static";
 
 export async function GET() {
   // getGithub() never throws: on failure it returns { ok: false, stale: true },
