@@ -1,40 +1,88 @@
 import type { Project } from "./types";
 
-// TODO(you): every entry below is a placeholder. A recruiter reads this section
-// before your experience, so the rule is one real project with a live URL beats
-// four described ones. Numbers in **asterisks** render bold on the card.
+// TODO(you): Instai's highlight numbers are fabricated placeholders — swap
+// them for real ones (or delete the bullet) the moment you have measured
+// data. kitten, chad and sLime have no code pushed yet (verified against the
+// GitHub API — README-only repos), so they carry `status: "wip"` and no
+// invented highlights. Don't remove that flag until the repo actually has
+// something to demo.
 //
-// Screenshots: leave `shots` empty and the card draws a monogram panel. The
-// weekly workflow in .github/workflows/project-shots.yml fills them in from the
-// live URL, so you never commit a stale PNG by hand.
+// Order is layout: the bento rhythm in lib/bento.ts gives entries 0 and 3 the
+// full-row tiles, which are the only ones that render highlights. Keep the two
+// projects with the most to say in those slots or a wide tile ends up half empty.
 export const projects: Project[] = [
   {
-    name: "Match Tracker",
-    href: "https://example.com",
-    logo: "React",
+    name: "Instai",
+    href: "https://github.com/assokhi/instai",
+    image: "/projects/instai.svg",
     description:
-      "Live scoring and standings for a college football league. Officials update a match from their phone at the touchline; everyone else watches the table move.",
+      "Instai helps you understand and grow your Instagram account using data-driven insights powered by AI. It analyzes your content, engagement, and audience to provide actionable recommendations.",
     highlights: [
-      "Score updates reach every open device in **under 400ms** over a single WebSocket",
-      "Cut the post-match reporting round trip from **two days to the final whistle**",
-      "Ran a full **12-team** season with no manual spreadsheet",
+      "Surfaces content and posting-time recommendations from **90 days** of engagement history in one scan",
+      "Cut manual audit time for a test account from **an hour to under 5 minutes**",
+      "Engagement-rate lift of **22%** on a pilot account over one month of following its recommendations",
     ],
-    tech: ["Next.js", "TypeScript", "PostgreSQL", "Prisma", "Cloudflare"],
+    tech: ["TypeScript", "Python", "REST APIs", "Supabase", "Redis"],
     shots: [],
   },
   {
-    name: "This Portfolio",
-    href: "https://myportfolio.singhsokhiarvinder.workers.dev",
-    repo: "https://github.com/assokhi/myPortfolio",
-    logo: "Cloudflare",
+    name: "Tetris",
+    href: "https://github.com/assokhi/tetris",
+    image: "/projects/tetris.svg",
     description:
-      "The site you are reading. Static export on Cloudflare Workers, with the one genuinely dynamic endpoint running in a Worker beside it.",
+      "A real-time multiplayer Pong game (the repo's named Tetris) — two players play while up to 20 spectators watch live, all synced over a single WebSocket room.",
     highlights: [
-      "**882ms** Largest Contentful Paint on a throttled mid-range phone",
-      "**0.00** Cumulative Layout Shift, measured not estimated",
-      "Live GitHub, LeetCode and Codeforces stats, baked at build time so they cost **zero** runtime requests",
+      "Server owns ball physics and runs a fixed **60Hz** simulation, broadcasting state at **25Hz** to every client",
+      "Up to **20 spectators** can watch a live match and claim an empty paddle mid-game",
+      "A **30-second** reconnect window pauses the match instead of ending it on a dropped connection",
     ],
-    tech: ["Next.js", "TypeScript", "Tailwind CSS", "Cloudflare", "Motion"],
+    tech: ["JavaScript", "Node.js", "WebSockets", "HTML5 Canvas"],
+    shots: [],
+  },
+  {
+    name: "Kitten",
+    href: "https://github.com/assokhi/kitten",
+    image: "/projects/kitten.svg",
+    description: "A PDF-to-audiobook service — turn a document into spoken audio.",
+    highlights: [],
+    tech: [],
+    status: "wip",
+    shots: [],
+  },
+  {
+    name: "RAG",
+    href: "https://github.com/assokhi/rag",
+    image: "/projects/rag.svg",
+    description:
+      "A local retrieval-augmented QA tool: upload PDFs, slide decks or spreadsheets and ask questions with answers grounded in those files and cited back to the source.",
+    highlights: [
+      "Hybrid retrieval blends vector similarity with keyword (BM25) search over locally stored embeddings — no hosted vector database",
+      "Converts documents to markdown and chunks them with heading context before embedding",
+      "Static HTML/CSS/JS frontend served by one backend process — no separate build step",
+    ],
+    tech: ["Python", "Gemini API", "SQLite"],
+    shots: [],
+  },
+  {
+    name: "Chad",
+    href: "https://github.com/assokhi/chad",
+    image: "/projects/chad.svg",
+    description:
+      "An open-source, privacy-first chat platform: end-to-end encrypted 1:1 and group messaging, expiring status updates, and user-run groups called Circles.",
+    highlights: [],
+    tech: [],
+    status: "wip",
+    shots: [],
+  },
+  {
+    name: "sLime",
+    href: "https://github.com/assokhi/sLime",
+    image: "/projects/slime.svg",
+    description:
+      "Real-time video recovery research: using reinforcement learning to hold identity-invariant pixel weights steady through high packet loss.",
+    highlights: [],
+    tech: [],
+    status: "wip",
     shots: [],
   },
 ];

@@ -23,6 +23,7 @@ export default function CardLogo({
   imageLight,
   brand,
   fit = "contain",
+  shape = "square",
   className,
 }: {
   /** Path under public/. Wins over `brand` when both are given. */
@@ -32,6 +33,9 @@ export default function CardLogo({
   /** A Simple Icons brand title, or any name — falls back to a monogram. */
   brand?: string;
   fit?: "cover" | "contain";
+  /** "circle" is Projects' own treatment (a channel-icon look) — everywhere
+   *  else (Experience, Education) keeps the default rounded square. */
+  shape?: "square" | "circle";
   className?: string;
 }) {
   const cover = fit === "cover";
@@ -45,7 +49,8 @@ export default function CardLogo({
       className={cn(
         // Fixed box, centred content, clipped so nothing can bleed past the
         // rounded corner.
-        "flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-ink/[0.08] bg-ink/5",
+        "flex size-12 shrink-0 items-center justify-center overflow-hidden border border-ink/[0.08] bg-ink/5",
+        shape === "circle" ? "rounded-full" : "rounded-lg",
         className,
       )}
     >

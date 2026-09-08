@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" fill="none">
+  <!-- Instai: the account, and the trend read out of it. Palette is the site's
+       own (bg -> surface ground, one accent), so the covers sit in the grid as
+       a family rather than six unrelated posters. -->
+  <defs>
+    <linearGradient id="ia-ground" x1="0" y1="0" x2="800" y2="450" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0F0F12" />
+      <stop offset="1" stop-color="#1A1A20" />
+    </linearGradient>
+    <pattern id="ia-grid" width="64" height="64" patternUnits="userSpaceOnUse">
+      <path d="M64 0H0V64" stroke="#FFFFFF" stroke-opacity="0.045" stroke-width="1" />
+    </pattern>
+  </defs>
+
+  <rect width="800" height="450" fill="url(#ia-ground)" />
+  <rect width="800" height="450" fill="url(#ia-grid)" />
+
+  <g stroke-linecap="round" stroke-linejoin="round">
+    <rect x="148" y="112" width="226" height="226" rx="62" stroke="#FFFFFF" stroke-opacity="0.82" stroke-width="4.5" />
+    <circle cx="261" cy="225" r="60" stroke="#FFFFFF" stroke-opacity="0.82" stroke-width="4.5" />
+    <circle cx="326" cy="160" r="8.5" fill="#FFFFFF" fill-opacity="0.82" />
+
+    <path d="M442 300 512 252 566 276 632 178" stroke="#A78BFA" stroke-width="5.5" />
+    <circle cx="632" cy="178" r="9.5" fill="#A78BFA" />
+  </g>
+
+  <rect width="800" height="1.5" fill="#FFFFFF" fill-opacity="0.07" />
+</svg>

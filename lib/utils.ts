@@ -16,13 +16,22 @@ export const displayHeading =
 
 /** One card surface for the whole site — experience tiles, live-stat cards and
  *  the contact links. Kept here so a change to the card look is one edit, not
- *  four copies of the same class string drifting apart. */
+ *  four copies of the same class string drifting apart.
+ *
+ *  The shadow is the same glass recipe as the nav pill (site-nav.tsx): an
+ *  inset top highlight plus a soft outer drop, both driven by the
+ *  --glass-highlight/--glass-drop tokens so day/night each get their own
+ *  values. Without it a card is just a flat rectangle a shade lighter than
+ *  the page — technically a boundary, not a surface with any lift to it. */
 export const cardSurface =
-  "rounded-2xl border border-border bg-surface/60 backdrop-blur-sm transition-colors duration-200 hover:border-accent-2/50";
+  "rounded-2xl border border-border bg-surface/60 shadow-[inset_0_1px_0_0_var(--glass-highlight),0_16px_40px_-12px_var(--glass-drop)] backdrop-blur-sm transition-colors duration-200 hover:border-accent-2/50";
 
-/** Section headings in the small-caps, wide-tracked style the rebuilt pages
- *  use — "EXPERIENCE", "PROJECTS". The script face is kept for the display
- *  moments (the footer signature, the vault) rather than every heading, so the
- *  page has a hierarchy instead of one decorative note repeated eight times. */
+/** Every section heading — "Experience", "Projects", "Tech stack". Real
+ *  heading weight (not a tiny tracked-caps label standing in for one): the
+ *  hero h1 is the only thing bigger, so this is the next rung down a type
+ *  scale that used to jump straight from a 4xl/6xl h1 to 12px uppercase text
+ *  with nothing between. The script face stays reserved for pure display
+ *  moments (the footer signature) rather than every heading — eight sections
+ *  in Great Vibes would be a novelty, not a hierarchy. */
 export const sectionLabel =
-  "text-xs font-semibold uppercase tracking-[0.22em] text-muted";
+  "text-2xl font-semibold tracking-tight text-fg sm:text-3xl";

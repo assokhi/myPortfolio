@@ -75,7 +75,10 @@ export default function RouteToast({
         cardSurface,
         // bg-surface/60 from cardSurface is see-through; over page content a
         // toast needs its own opaque ground or the text behind it shows.
-        "bg-surface p-4 shadow-[0_16px_40px_-12px_var(--glass-drop)]",
+        // An unprompted card floating over the page needs to read as its own
+        // object at rest, not just on hover — cardSurface's default
+        // border-border is too close to bg-surface to do that alone.
+        "border-accent-2/40 bg-surface p-4 shadow-[0_16px_40px_-12px_var(--glass-drop)]",
         "motion-safe:animate-[toast-in_220ms_ease-out]",
       )}
     >

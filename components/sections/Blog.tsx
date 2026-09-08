@@ -3,6 +3,7 @@ import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import type { PostMeta } from "@/content/types";
 import { formatDate } from "@/lib/dates";
+import { cn, cardSurface, sectionLabel } from "@/lib/utils";
 import BoldOnHover from "@/components/ui/bold-on-hover";
 
 /** date · N min read — the one metadata line every post surface uses, so the
@@ -180,7 +181,50 @@ export function PostList({ posts, startIndex = 1 }: { posts: PostMeta[]; startIn
   );
 }
 
-/** Home-page view: the newest post on top of a literal stack of cards, older
- *  ones peeking out beneath. Hover or keyboard focus lifts a card clear of the
- *  pile. DOM order is newest-first, so a screen reader gets the same ranking
- *  the stack draws. */
+/** Home-page teaser: the 3 newest posts as compact cards, in the spot the
+ *  Vault teaser used to occupy. Same card language as Projects/Experience
+ *  (`cardSurface`), same "View all" pattern as Projects' own limit+link. */
+export function HomeBlogCards({ posts, id = "blog" }: { posts: PostMeta[]; id?: string }) {
+  const shown = posts.slice(0, 3);
+  if (!shown.length) return null;
+
+  return (
+    <section
+      id={id}
+      aria-labelledby={`${id}-heading`}
+      className="reveal mx-auto w-full max-w-4xl px-5 py-14"
+    >
+      <h2 id={`${id}-heading`} className={cn(sectionLabel, "mb-6 block")}>
+        Blog
+      </h2>
+
+      <div className="grid gap-5 sm:grid-cols-3">
+        {shown.map((post) => (
+          <article key={post.slug} className={cn(cardSurface, "group relative p-4")}>
+            <Cover
+              post={post}
+              sizes="(min-width: 640px) 33vw, 100vw"
+              className="aspect-[16/10] w-full rounded-xl"
+            />
+            <h3 className="mt-3 text-sm font-semibold text-fg">
+              <Link href={`/blog/${post.slug}`} className="underline-offset-4 hover:underline">
+                <span className="absolute inset-0" aria-hidden="true" />
+                <BoldOnHover text={post.title} from={600} />
+              </Link>
+            </h3>
+            <div className="mt-1.5">
+              <PostMetaLine post={post} withTags={false} />
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <Link
+        href="/blog"
+        className="mt-8 inline-block text-sm font-medium text-accent underline-offset-4 hover:underline"
+      >
+        Explore more <span aria-hidden="true">&rarr;</span>
+      </Link>
+    </section>
+  );
+}

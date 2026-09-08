@@ -1,9 +1,13 @@
 import type { Experience } from "./types";
 
 // Newest first. Each highlight is an OUTCOME with a number where a number exists.
-// TODO(you): add `href` to each role — the Scriptivox verification link and the
-// two Apache pull-request URLs from the resume. Omitted rather than guessed, so
-// nothing here renders a dead link.
+// TODO(you): add `href` to each role — the two Apache pull-request URLs from
+// the resume, and for Scriptivox the exact verify link (the certificate,
+// SVX-INT-2026-E6B29D, prints "scriptivox.com/verify" plus the ID separately
+// and a QR code — the QR's encoded path isn't readable from a PDF text dump,
+// so the exact URL shape, e.g. /verify/SVX-INT-2026-E6B29D vs a query param,
+// needs confirming from the QR itself before it goes here). Omitted rather
+// than guessed, so nothing here renders a dead link.
 export const experience: Experience[] = [
   {
     company: "Scriptivox",

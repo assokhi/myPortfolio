@@ -51,6 +51,7 @@ export async function GithubCard({ compact, className, tone }: CardProps = {}) {
       title="GitHub"
       href={g.profileUrl}
       className={className}
+      tone={tone}
       footerLeft={
         /* Badges ride the footer line so the chip centres against them rather
            than hanging below. Plain <img tone={tone}>: 64px assets straight off GitHub's

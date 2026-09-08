@@ -140,6 +140,27 @@ export type Certification = {
   verifyUrl: string;
 };
 
+/** An online course completed but not formally certified — no credential ID,
+ *  no verify link, so it lives in its own bento row on Education rather than
+ *  the verified Certifications card, which shows nothing rather than a badge
+ *  nobody can check. */
+export type Course = {
+  name: string;
+  issuer: string;
+  instructor?: string;
+  href?: string;
+  /** Two hex colours for the card's cover — no real thumbnail file exists for
+   *  any of these, and DeepLearning.AI's own course tiles are exactly this: a
+   *  two-tone diagonal wash with the title set on top. A CSS gradient gets
+   *  the same look with no image request and nobody else's asset. */
+  gradient: [string, string];
+};
+
+export type Book = {
+  title: string;
+  author: string;
+};
+
 export type Extra = {
   title: string;
   description: string;
@@ -172,16 +193,15 @@ export type Project = {
   tech: string[];
   /** A brand title from simple-icons, or omitted for a monogram. */
   logo?: string;
+  /** Path under public/ to the project's own mark — wins over `logo` when
+   *  both are set, same precedence as CardLogo's image/brand/monogram order. */
+  image?: string;
   /** Screenshots under public/, newest first. Written by the weekly Playwright
    *  workflow in .github/workflows/, not by hand. */
   shots?: string[];
   /** Source, when it is public. */
   repo?: string;
-};
-
-export type VaultItem = {
-  title: string;
-  /** Author, year, or however the thing is usually credited. */
-  subtitle: string;
-  category: "Novels" | "Movies" | "Shows";
+  /** "wip" shows an "In progress" badge instead of implying a finished,
+   *  demoable product — for a repo that exists but isn't done yet. */
+  status?: "wip";
 };

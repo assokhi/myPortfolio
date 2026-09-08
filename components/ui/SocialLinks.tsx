@@ -18,7 +18,16 @@ const tooltip =
 
 /** Email / socials / resume as one icon row. Server component: the links are
  *  in the HTML for scrapers wherever it is placed. */
-export default function SocialLinks({ className }: { className?: string }) {
+export default function SocialLinks({
+  className,
+  showResume = true,
+}: {
+  className?: string;
+  /** Off where a separate, more prominent Resume link already sits next to
+   *  this row (the hero) — otherwise the same destination appears twice in a
+   *  row. Footer has no such link, so it keeps the default. */
+  showResume?: boolean;
+}) {
   return (
     <ul className={cn("flex items-center gap-2", className)}>
       <li>
@@ -44,18 +53,20 @@ export default function SocialLinks({ className }: { className?: string }) {
           </li>
         );
       })}
-      <li>
-        <a
-          href={profile.resumePath}
-          target="_blank"
-          rel="noreferrer"
-          aria-label="Open resume (PDF)"
-          className={tile}
-        >
-          <FileText className="size-4" aria-hidden="true" />
-          <span className={tooltip}>Resume</span>
-        </a>
-      </li>
+      {showResume ? (
+        <li>
+          <a
+            href={profile.resumePath}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Open resume (PDF)"
+            className={tile}
+          >
+            <FileText className="size-4" aria-hidden="true" />
+            <span className={tooltip}>Resume</span>
+          </a>
+        </li>
+      ) : null}
     </ul>
   );
 }

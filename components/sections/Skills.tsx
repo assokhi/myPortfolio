@@ -18,7 +18,7 @@ export default function Skills({ id = "skills" }: { id?: string }) {
         Tech stack
       </h2>
 
-      <div className="space-y-6">
+      <div className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
         {Object.entries(skills.technologies).map(([group, items]) => (
           <div key={group}>
             <p className="mb-3 text-sm font-medium text-fg">{group}</p>

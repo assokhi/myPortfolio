@@ -52,6 +52,8 @@ export default function Experience({
                   imageLight={role.imageLight}
                   brand={role.logo ?? role.company}
                   fit={role.imageFit}
+                  shape="circle"
+                  className="size-[42px]"
                 />
 
                 <div className="min-w-0">
@@ -75,18 +77,12 @@ export default function Experience({
                   </p>
                 </div>
 
-                <time className="ml-auto hidden shrink-0 text-sm text-muted sm:block">
+                <time className="ml-auto shrink-0 text-sm text-muted">
                   {formatRange(role.start, role.end)}
                 </time>
               </div>
             }
           >
-            {/* Repeated inside the panel for phones, where the summary row has
-                no space for it. */}
-            <time className="mb-3 block text-sm text-muted sm:hidden">
-              {formatRange(role.start, role.end)}
-            </time>
-
             {role.stack.length ? (
               <ul className="mb-5 flex flex-wrap gap-2">
                 {role.stack.map((tech) => (

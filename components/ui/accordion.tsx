@@ -1,5 +1,8 @@
+"use client";
+
+import { useRef } from "react";
 import { ChevronDown } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, cardSurface } from "@/lib/utils";
 
 /** One expandable row, shared by Experience and Education.
  *
@@ -10,10 +13,18 @@ import { cn } from "@/lib/utils";
  *  content, and it works with JavaScript switched off. A hand-rolled version
  *  has to re-earn every one of those, and usually earns three.
  *
- *  This is a server component — there is no client JavaScript in an accordion
- *  on this site at all. The open/close animation is CSS (see `.accordion` in
- *  globals.css) and is a progressive enhancement: where `::details-content`
- *  is not supported the row still opens, just instantly. */
+ *  The open/close animation is CSS (see `.accordion` in globals.css) and is a
+ *  progressive enhancement: where `::details-content` is not supported the
+ *  row still opens, just instantly.
+ *
+ *  Hover-to-preview below is the one bit of client JS this component carries,
+ *  and it is deliberately additive: it only ever opens a row that hover
+ *  itself opened, and only closes that same row again on mouse-leave. A row
+ *  opened by click or keyboard (native `<details>` behaviour, untouched) is
+ *  never auto-closed by this — mousing away from a row you clicked open
+ *  leaves it open, exactly as before this existed. No-JS, keyboard-only and
+ *  screen-reader use are all unaffected: they never fire these handlers and
+ *  fall back to the native toggle this always had. */
 export default function Accordion({
   summary,
   defaultOpen = false,
@@ -27,13 +38,30 @@ export default function Accordion({
   className?: string;
   children: React.ReactNode;
 }) {
+  const detailsRef = useRef<HTMLDetailsElement>(null);
+  // Tracks whether THIS row's current open state came from hover, so
+  // mouse-leave only ever undoes what hover itself did.
+  const hoverOpenedRef = useRef(false);
+
   return (
     <details
+      ref={detailsRef}
       open={defaultOpen}
-      className={cn(
-        "accordion group rounded-2xl border border-border bg-surface/60 backdrop-blur-sm transition-colors duration-200 hover:border-accent-2/50",
-        className,
-      )}
+      onMouseEnter={() => {
+        const el = detailsRef.current;
+        if (el && !el.open) {
+          el.open = true;
+          hoverOpenedRef.current = true;
+        }
+      }}
+      onMouseLeave={() => {
+        const el = detailsRef.current;
+        if (el && hoverOpenedRef.current) {
+          el.open = false;
+          hoverOpenedRef.current = false;
+        }
+      }}
+      className={cn("accordion group", cardSurface, className)}
     >
       <summary
         className={cn(

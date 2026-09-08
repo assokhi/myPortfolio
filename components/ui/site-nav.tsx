@@ -144,18 +144,7 @@ export function SiteNav() {
           })}
         </div>
 
-        {/* Separated from the links: a control, not a destination, so it must
-            not read as a seventh nav item. `ml-auto` only while the bar is flat
-            and showing links — inside the pill everything is one centred group,
-            and on a phone the row is already right-aligned. */}
-        <span
-          aria-hidden="true"
-          className={cn(
-            "mx-1 hidden h-5 w-px shrink-0 bg-border sm:block",
-            !collapsed && "sm:ml-auto",
-          )}
-        />
-        <ThemeToggle />
+        <ThemeToggle className={cn(!collapsed && "sm:ml-auto")} />
 
         <button
           type="button"

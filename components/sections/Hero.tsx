@@ -2,8 +2,8 @@ import Link from "next/link";
 import { profile, mailtoHref } from "@/content/profile";
 import SocialLinks from "@/components/ui/SocialLinks";
 import RotatingTagline from "@/components/ui/rotating-tagline";
-import CopyEmailButton from "@/components/ui/copy-email-button";
 import LinkPreviewCard from "@/components/ui/link-preview-card";
+import HeroDoodle from "@/components/ui/hero-doodle";
 
 /** The only thing above the fold, so it answers "who is this and what do they
  *  do" before a single pixel is scrolled.
@@ -22,8 +22,12 @@ export default function Hero() {
     <section
       id="hero"
       aria-labelledby="hero-heading"
-      className="mx-auto w-full max-w-4xl px-5 pt-10 pb-20 sm:pt-16"
+      className="relative mx-auto w-full max-w-4xl px-5 pt-10 pb-20 sm:pt-16"
     >
+      {/* Sits in the page margin outside this column — 2xl+ only, so there is
+          always empty gutter to occupy and it can never overlap the copy. */}
+      <HeroDoodle className="absolute top-10 left-0 -translate-x-[140%]" />
+
       {profile.avatar ? (
         // Images are unoptimized on Workers; next/image would only add markup.
         // Explicit width and height so the reserved box is right on first
@@ -58,7 +62,12 @@ export default function Hero() {
         className="mt-3 text-xl font-medium text-accent-2 sm:text-2xl"
       />
 
-      <CopyEmailButton email={profile.email} className="mt-6" />
+      <Link
+        href="/projects"
+        className="mt-6 inline-flex items-center rounded-full bg-accent px-5 py-2 text-sm font-medium text-bg transition-opacity duration-200 hover:opacity-90"
+      >
+        View my Projects
+      </Link>
 
       <p className="mt-6 max-w-2xl font-serif text-lg leading-relaxed text-fg">
         {profile.intro}{" "}
@@ -102,7 +111,7 @@ export default function Hero() {
       </p>
 
       <div className="mt-8 flex flex-wrap items-center gap-3">
-        <SocialLinks />
+        <SocialLinks showResume={false} />
         <Link
           href="/resume"
           className="inline-flex items-center rounded-full bg-accent px-5 py-2 text-sm font-medium text-bg transition-opacity duration-200 hover:opacity-90"

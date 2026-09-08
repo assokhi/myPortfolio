@@ -198,12 +198,27 @@ export default function TechIcon({
  *  rows on experience and project cards. A hover-only label is unusable on a
  *  touch screen, which is most of this site's traffic. */
 export function TechPill({ name, className }: { name: string; className?: string }) {
+  // Tinted by the brand's own colour where one exists — a row of otherwise
+  // identical near-black chips is what read as flat/low-quality; this is the
+  // same colour the mark itself already renders in, just carried onto the
+  // pill. Falls back to the plain ink-tinted pill for generic entries (REST,
+  // CI/CD, ...) that have no brand colour to borrow.
+  const hex = brandHex(name);
   return (
     <li
       className={cn(
-        "inline-flex items-center gap-2 rounded-full border border-ink/[0.08] bg-ink/5 px-3 py-1.5 text-sm text-fg",
+        "inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm text-fg",
+        !hex && "border-ink/[0.08] bg-ink/5",
         className,
       )}
+      style={
+        hex
+          ? {
+              borderColor: `color-mix(in srgb, ${hex} 45%, transparent)`,
+              backgroundColor: `color-mix(in srgb, ${hex} 16%, var(--color-surface))`,
+            }
+          : undefined
+      }
     >
       <BrandMark name={name} className="size-4" />
       {name}

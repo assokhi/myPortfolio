@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { ExternalLink } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 // lucide-react v1 dropped brand marks; this repo keeps its own.
 import { Github } from "@/components/ui/BrandIcons";
 import { projects } from "@/content/projects";
-import { cn, cardSurface, sectionLabel } from "@/lib/utils";
+import { bentoSpans } from "@/lib/bento";
+import { cn, sectionLabel } from "@/lib/utils";
 import { TechPill } from "@/components/ui/tech-icon";
-import CardLogo from "@/components/ui/card-logo";
+import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
 
 /** Renders `**wrapped**` runs bold and leaves everything else alone.
  *
@@ -37,6 +38,7 @@ export default function Projects({
 }) {
   const Heading = headingLevel;
   const shown = limit ? projects.slice(0, limit) : projects;
+  const spans = bentoSpans(shown.length);
 
   return (
     <section
@@ -48,90 +50,131 @@ export default function Projects({
         Projects
       </Heading>
 
-      <div className="space-y-10">
-        {shown.map((project) => (
-          <article key={project.name} className={cn(cardSurface, "p-5 sm:p-6")}>
-            <div className="flex items-center gap-3">
-              <CardLogo brand={project.logo ?? project.name} />
+      <BentoGrid>
+        {shown.map((project, i) => {
+          const span = spans[i];
+          // A tile that owns a whole row gets the cover beside the copy rather
+          // than above it: a 16:9 cover across the full width would be 500px
+          // tall and push everything that matters below the fold. The half-row
+          // tiles keep the familiar cover-on-top card.
+          const wide = span === 6;
+          const cover = project.shots?.[0] ?? project.image;
+          const live = project.repo ? project.href : null;
+          const code = project.repo ?? project.href;
 
-              <h3 className="text-lg font-semibold text-fg">
-                <a
-                  href={project.href}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="inline-flex items-center gap-1.5 hover:text-accent-2"
-                >
-                  {project.name}
-                  <ExternalLink size={15} aria-hidden="true" />
-                  <span className="sr-only">(opens in a new tab)</span>
-                </a>
-              </h3>
-
-              {project.repo ? (
-                <a
-                  href={project.repo}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  aria-label={`${project.name} source on GitHub`}
-                  className="ml-auto text-muted transition-colors hover:text-fg"
-                >
-                  <Github aria-hidden="true" className="size-[18px]" />
-                </a>
-              ) : null}
-            </div>
-
-            {project.shots?.length ? (
-              <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                {project.shots.map((shot) => (
-                  // see
-                  // next.config.ts: no image optimizer exists on Workers.
-                  // width/height and lazy loading are the two things that
-                  // actually matter here, and both are set.
+          return (
+            <BentoGridItem
+              key={project.name}
+              span={span}
+              className={wide ? "md:flex-row" : undefined}
+            >
+              <div
+                className={cn(
+                  "relative shrink-0 overflow-hidden bg-ink/5",
+                  wide ? "aspect-video md:aspect-auto md:w-[42%]" : "aspect-video w-full",
+                )}
+              >
+                {cover ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
-                    key={shot}
-                    src={shot}
-                    alt={`${project.name} screenshot`}
-                    width={640}
-                    height={400}
+                    src={cover}
+                    alt=""
+                    width={800}
+                    height={450}
                     loading="lazy"
-                    className="w-full rounded-lg border border-border object-cover"
+                    className="size-full object-cover transition-transform duration-500 group-hover/bento:scale-[1.03]"
                   />
-                ))}
+                ) : null}
               </div>
-            ) : null}
 
-            <p className="mt-4 text-sm leading-relaxed text-muted">
-              {project.description}
-            </p>
+              <div className={cn("flex flex-1 flex-col gap-3 p-5", wide && "md:p-6")}>
+                <div className="flex items-center gap-2">
+                  <h3 className="min-w-0 text-base font-semibold tracking-tight text-fg">
+                    <a
+                      href={project.href}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      // Stretched link: one tab stop, whole tile clickable.
+                      className="after:absolute after:inset-0 after:content-[''] hover:text-accent-2"
+                    >
+                      {project.name}
+                      <span className="sr-only">(opens in a new tab)</span>
+                    </a>
+                  </h3>
+                  <ArrowUpRight
+                    size={15}
+                    aria-hidden="true"
+                    className="shrink-0 text-muted transition-transform duration-200 group-hover/bento:-translate-y-0.5 group-hover/bento:translate-x-0.5 group-hover/bento:text-accent-2"
+                  />
+                  {project.status === "wip" ? (
+                    <span className="ml-auto shrink-0 rounded-full border border-border px-2 py-0.5 text-[0.65rem] font-medium text-muted">
+                      In progress
+                    </span>
+                  ) : null}
+                </div>
 
-            {project.highlights.length ? (
-              <ul className="mt-4 space-y-2">
-                {project.highlights.map((point) => (
-                  <li
-                    key={point}
-                    className="relative pl-5 text-sm leading-relaxed text-muted"
-                  >
-                    <span
-                      aria-hidden="true"
-                      className="absolute top-[0.5rem] left-0 size-1.5 rounded-full bg-accent-2"
-                    />
-                    {emphasise(point)}
-                  </li>
-                ))}
-              </ul>
-            ) : null}
+                <p className={cn("text-sm leading-relaxed text-muted", wide ? "line-clamp-3" : "line-clamp-4")}>
+                  {project.description}
+                </p>
 
-            {project.tech.length ? (
-              <ul className="mt-5 flex flex-wrap gap-2">
-                {project.tech.map((tech) => (
-                  <TechPill key={tech} name={tech} />
-                ))}
-              </ul>
-            ) : null}
-          </article>
-        ))}
-      </div>
+                {/* Highlights only where there is room for them. A half-row tile
+                    that tried to carry three bullets is what was clipping. */}
+                {wide && project.highlights.length ? (
+                  <ul className="space-y-1.5">
+                    {project.highlights.slice(0, 3).map((point) => (
+                      <li
+                        key={point}
+                        className="flex gap-2 text-xs leading-snug text-muted"
+                      >
+                        <span aria-hidden="true" className="mt-1.5 size-1 shrink-0 rounded-full bg-muted/60" />
+                        <span>{emphasise(point)}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
+
+                <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-3 pt-1">
+                  {project.tech.length ? (
+                    <ul className="flex flex-wrap gap-1.5">
+                      {project.tech.slice(0, wide ? 5 : 3).map((tech) => (
+                        <TechPill
+                          key={tech}
+                          name={tech}
+                          className="gap-1.5 px-2 py-1 text-[0.7rem]"
+                        />
+                      ))}
+                    </ul>
+                  ) : null}
+
+                  <div className="relative z-10 ml-auto flex items-center gap-3 text-xs font-medium">
+                    {live ? (
+                      <a
+                        href={live}
+                        target="_blank"
+                        rel="noreferrer noopener"
+                        className="text-fg transition-colors hover:text-accent-2"
+                      >
+                        Live
+                        <span className="sr-only"> demo of {project.name} (opens in a new tab)</span>
+                      </a>
+                    ) : null}
+                    <a
+                      href={code}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="inline-flex items-center gap-1.5 text-muted transition-colors hover:text-fg"
+                    >
+                      <Github aria-hidden="true" className="size-4" />
+                      Code
+                      <span className="sr-only"> for {project.name} on GitHub (opens in a new tab)</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </BentoGridItem>
+          );
+        })}
+      </BentoGrid>
 
       {limit && projects.length > limit ? (
         <Link

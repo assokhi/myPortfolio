@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" fill="none">
+  <!-- RAG: a passage retrieved out of a stack of documents and carried into the
+       answer, still attached to where it came from. The citation IS the idea,
+       so it is the only thing wearing the accent. -->
+  <defs>
+    <linearGradient id="rg-ground" x1="0" y1="0" x2="800" y2="450" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0F0F12" />
+      <stop offset="1" stop-color="#1A1A20" />
+    </linearGradient>
+    <pattern id="rg-grid" width="64" height="64" patternUnits="userSpaceOnUse">
+      <path d="M64 0H0V64" stroke="#FFFFFF" stroke-opacity="0.045" stroke-width="1" />
+    </pattern>
+  </defs>
+
+  <rect width="800" height="450" fill="url(#rg-ground)" />
+  <rect width="800" height="450" fill="url(#rg-grid)" />
+
+  <!-- Nudged right so the stack keeps its margin: a full-row tile crops this
+       cover horizontally, and the back sheet was the first thing to go. -->
+  <g transform="translate(18 0)" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="118" y="128" width="182" height="230" rx="18" stroke="#FFFFFF" stroke-opacity="0.16" stroke-width="3" />
+    <rect x="140" y="114" width="182" height="230" rx="18" fill="#0F0F12" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="3.5" />
+    <rect x="162" y="100" width="182" height="230" rx="18" fill="#121216" stroke="#FFFFFF" stroke-opacity="0.82" stroke-width="4.5" />
+
+    <path d="M192 148h122M192 180h84M192 212h108" stroke="#FFFFFF" stroke-opacity="0.26" stroke-width="4.5" />
+    <path d="M192 262h108" stroke="#3FE0A3" stroke-width="5.5" />
+
+    <path d="M310 262c62 0 66-56 128-56" stroke="#3FE0A3" stroke-opacity="0.55" stroke-width="3" />
+    <circle cx="446" cy="206" r="7" fill="#3FE0A3" />
+
+    <path d="M478 206h176M478 250h120" stroke="#FFFFFF" stroke-opacity="0.82" stroke-width="4.5" />
+  </g>
+
+  <rect width="800" height="1.5" fill="#FFFFFF" fill-opacity="0.07" />
+</svg>
