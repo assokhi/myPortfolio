@@ -37,6 +37,9 @@ export type Profile = {
   emailSubject: string;
   /** Path under public/ */
   resumePath: string;
+  /** Path under public/ for the footer avatar, e.g. "/avatar.jpg". Omit it and
+   *  the footer draws a monogram instead, which is why it stays optional. */
+  avatar?: string;
   /** 3-4 sentences. The first two run in the home About block; /about runs
    *  all of them. Keep the first two the ones that stand alone. */
   shortBio: string[];
@@ -45,6 +48,23 @@ export type Profile = {
   currently: { label: string; value: string; icon: AboutIcon }[];
   /** The non-work half. Short labels, not sentences. */
   interests: { label: string; icon: AboutIcon }[];
+  /** Short phrases the hero cycles through under your name. Three to five is
+   *  the range: fewer reads as a typo, more and nobody waits for the loop. */
+  taglines: string[];
+  /** Options in the contact form's subject dropdown. The first is the
+   *  default. */
+  contactSubjects: string[];
+  /** The one project worth interrupting the bio to mention. Rendered as an
+   *  inline link that unfurls a preview card on hover. */
+  flagship?: {
+    href: string;
+    title: string;
+    /** One line. A pitch, not a paragraph. */
+    pitch: string;
+    /** Path under public/, or an absolute URL. */
+    image?: string;
+    cta?: string;
+  };
   socials: Social[];
   /** Public handles. Not secrets — see prd/03-api.md. */
   githubUsername: string;
@@ -136,4 +156,32 @@ export type PostMeta = {
   /** Path under public/ for the card image, e.g. "/blog/my-post.jpg". Posts
    *  without one fall back to a flat colour block, so it stays optional. */
   cover?: string;
+};
+
+export type Project = {
+  name: string;
+  /** The live URL. This is the point of the card — a project a reader cannot
+   *  open is a claim, not proof. */
+  href: string;
+  /** One or two sentences. What it is and who it is for. */
+  description: string;
+  /** Outcomes with numbers in them. Wrap the number in **asterisks** and the
+   *  card renders it bold — the data decides what is emphasised, not the
+   *  component. */
+  highlights: string[];
+  tech: string[];
+  /** A brand title from simple-icons, or omitted for a monogram. */
+  logo?: string;
+  /** Screenshots under public/, newest first. Written by the weekly Playwright
+   *  workflow in .github/workflows/, not by hand. */
+  shots?: string[];
+  /** Source, when it is public. */
+  repo?: string;
+};
+
+export type VaultItem = {
+  title: string;
+  /** Author, year, or however the thing is usually credited. */
+  subtitle: string;
+  category: "Novels" | "Movies" | "Shows";
 };

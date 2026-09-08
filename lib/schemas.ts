@@ -148,3 +148,25 @@ export const apiResult = <T extends z.ZodType>(data: T) =>
     z.object({ ok: z.literal(true), data, stale: z.literal(false).optional() }),
     z.object({ ok: z.literal(false), error: z.string(), stale: z.literal(true) }),
   ]);
+
+/* ---------- Runtime endpoints (worker.ts) ---------- */
+
+/** GET /api/blog-views — slug to count. */
+export const blogViews = z.record(z.string(), z.number());
+
+/** POST /api/blog-views/:slug. `counted` is false when today's read was
+ *  already recorded for this visitor. */
+export const blogViewWrite = z.object({
+  count: z.number(),
+  counted: z.boolean(),
+});
+
+/** POST /api/contact. `stored` is the D1 write, `emailed` the Resend call —
+ *  reported separately because the first one is what makes the submission
+ *  safe and the second is a convenience on top. */
+export const contactResult = z.object({
+  stored: z.boolean(),
+  emailed: z.boolean(),
+});
+
+export const newsletterResult = z.object({ subscribed: z.boolean() });

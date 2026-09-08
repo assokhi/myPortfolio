@@ -1,3 +1,11 @@
+> **Superseded (2026-09-08).** This describes the first build: routes
+> `/about`, `/experience`, `/skills`, and a lamp/tracing-beam design language.
+> The site was rebuilt to a new spec — routes are now `/work`, `/projects`,
+> `/blog`, `/contact`, `/resume`, plus unlisted `/vault` and `/views`, on a grid
+> paper backdrop. What is still true here: who the site is for, the performance
+> budgets, and why the accessibility rules are non-negotiable. What is not:
+> every route, component and hosting reference below.
+
 # Portfolio — product requirements
 
 Everything this site needs to be, written down before any code exists.

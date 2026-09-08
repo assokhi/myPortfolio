@@ -6,6 +6,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { getPost, getPosts } from "@/lib/blog";
 import { profile } from "@/content/profile";
 import { PostMetaLine } from "@/components/sections/Blog";
+import ViewBeacon from "@/components/sections/ViewBeacon";
 
 /** One real HTML file per post is generated at deploy time: instant loads for
  *  visitors, plain HTML for search engines. */
@@ -44,8 +45,12 @@ export default async function PostPage({ params }: PageProps<"/blog/[slug]">) {
   const newer = i > 0 ? all[i - 1] : undefined;
   const older = i >= 0 && i < all.length - 1 ? all[i + 1] : undefined;
 
+  // Records the read. Renders nothing and cannot fail the page.
+  const beacon = <ViewBeacon slug={slug} />;
+
   return (
     <div className="mx-auto max-w-3xl px-5 py-12 sm:py-16">
+      {beacon}
       <Link
         href="/blog"
         className="inline-flex items-center gap-2 text-sm text-muted transition-colors hover:text-accent"

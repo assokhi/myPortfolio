@@ -19,3 +19,10 @@ export const displayHeading =
  *  four copies of the same class string drifting apart. */
 export const cardSurface =
   "rounded-2xl border border-border bg-surface/60 backdrop-blur-sm transition-colors duration-200 hover:border-accent-2/50";
+
+/** Section headings in the small-caps, wide-tracked style the rebuilt pages
+ *  use — "EXPERIENCE", "PROJECTS". The script face is kept for the display
+ *  moments (the footer signature, the vault) rather than every heading, so the
+ *  page has a hierarchy instead of one decorative note repeated eight times. */
+export const sectionLabel =
+  "text-xs font-semibold uppercase tracking-[0.22em] text-muted";

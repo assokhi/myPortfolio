@@ -4,8 +4,15 @@ Personal portfolio site. **Purpose: job hunting** — a recruiter skims this in
 under a minute. Every call ranks: clear role → projects with outcomes → fast
 load → easy contact. Animation supports scanning; it never delays it.
 
-Status: built from the plan in `prd/`. All eight phases are in place; the
-content files still carry example data marked `TODO(you)`.
+Status: rebuilt 2026-09-08 against the build spec in
+`~/.claude/plans/frolicking-leaping-key.md`. `prd/` describes the FIRST build
+(routes `/about`, `/experience`, `/skills`; lamp and tracing-beam design) and is
+superseded — read it for the reasoning about audience and performance budgets,
+not for the current structure.
+
+Content files still carry example data marked `TODO(you)`, and some of it is
+live: the certifications are fabricated and six of seven blog posts are lorem
+ipsum. That is the highest-priority fix on a site whose job is hiring.
 
 ## Stack (decided 2026-08-23)
 
@@ -54,14 +61,20 @@ dependencies. Paste components into `components/ui/` and own them.
 ## Commands
 
 ```bash
-npm run dev          # http://localhost:3000 (no /api/visitors — that is worker.ts)
+npm run dev          # http://localhost:3000 (no runtime /api/* — those are worker.ts)
 npm run build        # static export to out/; must pass with zero TypeScript errors
 npm run preview      # wrangler dev on :8787 — out/ + worker.ts, the deployed shape
 npm run lint
 
-# all five endpoints, against `npm run preview`
+# all six endpoints, against `npm run preview`
 CHECK_BASE_URL=http://127.0.0.1:8787 npm run check:apis
+
+npx wrangler types   # regenerate worker-configuration.d.ts after editing wrangler.jsonc
+npx wrangler d1 execute portfolio_db --local --file=db/schema.sql
 ```
+
+On Windows `wrangler dev` keeps a handle on `out/`, so `npm run build` fails with
+`EBUSY: rmdir out` while the preview is running. Stop the preview first.
 
 `npm run typecheck` needs `next build` to have run once — Next generates the
 `PageProps`/`LayoutProps` route types into `.next/types`.

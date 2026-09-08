@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Great_Vibes } from "next/font/google";
 import { profile } from "@/content/profile";
 import Header from "@/components/sections/Header";
@@ -37,6 +37,17 @@ export const metadata: Metadata = {
   },
   twitter: { card: "summary_large_image" },
   alternates: { canonical: "/" },
+};
+
+/** theme-color paints the browser chrome around the page — the address bar on
+ *  Android, the title bar on desktop Safari. Two entries with prefers-color-scheme
+ *  media queries rather than one fixed colour, so it follows the visitor's theme
+ *  instead of contradicting it. Each value is the matching --color-bg. */
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#fbfbfc" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0b" },
+  ],
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

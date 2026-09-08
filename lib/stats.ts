@@ -110,7 +110,8 @@ async function achievements(
 export async function getGithub(): Promise<ApiResult<GithubStats>> {
   const login = profile.githubUsername;
   const token = process.env.GITHUB_TOKEN;
-  // Without a token GitHub allows 60 req/hour per IP, and Vercel shares IPs.
+  // Without a token GitHub allows 60 req/hour per IP, and CI build runners
+  // share IPs.
   const headers: Record<string, string> = {
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
     "X-GitHub-Api-Version": "2022-11-28",

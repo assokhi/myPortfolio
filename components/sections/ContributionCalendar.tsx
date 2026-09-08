@@ -22,12 +22,14 @@ export default function ContributionCalendar() {
             ever displayed, so the hidden one is never fetched. Both carry the
             same alt: display:none takes the other out of the accessibility
             tree, so the chart is announced once whichever theme is on. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={SKYLINE("profile-night-view")}
           alt={`3D visualization of ${profile.githubUsername}'s GitHub commit history over the last year, with a breakdown of commits, issues, pull requests, reviews and repositories, and languages used`}
           loading="lazy"
           className="w-full light:hidden [mask-image:radial-gradient(ellipse_at_center,black_60%,transparent_100%)]"
         />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={SKYLINE("profile-green")}
           alt={`3D visualization of ${profile.githubUsername}'s GitHub commit history over the last year, with a breakdown of commits, issues, pull requests, reviews and repositories, and languages used`}

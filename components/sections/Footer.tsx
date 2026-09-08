@@ -1,143 +1,105 @@
-import Link from "next/link";
 import { profile, mailtoHref } from "@/content/profile";
 import SocialLinks from "@/components/ui/SocialLinks";
+import NewsletterForm from "@/components/sections/NewsletterForm";
+import VisitorCounter from "@/components/sections/VisitorCounter";
 
-/** The 21st.dev "footer-01" block, rebuilt on this repo's tokens and this
- *  site's actual content. What the published version assumes and this does
- *  not:
- *
- *  - `@/components/ui/separator` is shadcn, and this is not a shadcn project
- *    (see CLAUDE.md — `shadcn init` would overwrite globals.css). A 1px rule
- *    is one div.
- *  - `text-muted-foreground` / `text-foreground` are shadcn tokens; here they
- *    are `text-muted` / `text-fg`.
- *  - `animate-in slide-in-from-bottom-10` needs tailwindcss-animate, which is
- *    not installed. A footer does not need an entrance animation.
- *  - Its Sitemap column (Pricing, Services, Terms, 404) and Contact block
- *    (street address, phone) are marketing-site furniture. Links here point at
- *    pages that exist; the contact rows are the real ones from profile.ts. */
+/** Peerlist (or any embeddable social-proof profile). Configured entirely by
+ *  environment variable so the block simply does not exist when there is no
+ *  profile to show — an empty card that says "no upvotes" is worse than no
+ *  card. Read at build time: this is a static export, so the value is baked in.
+ */
+const peerlistUrl = process.env.NEXT_PUBLIC_PEERLIST_URL;
 
-// Every entry must be a route that exists. Education is absent on purpose:
-// its detail page was removed, and it lives only as a home-page section now.
-const sitemap = [
-  { title: "About", href: "/about" },
-  { title: "Experience", href: "/experience" },
-  { title: "Skills", href: "/skills" },
-  { title: "Blog", href: "/blog" },
-];
-
-const profiles = [
-  ...profile.socials.map((s) => ({ title: s.label, href: s.href })),
-  {
-    title: "LeetCode",
-    href: `https://leetcode.com/u/${profile.leetcodeUsername}/`,
-  },
-  {
-    title: "Codeforces",
-    href: `https://codeforces.com/profile/${profile.codeforcesHandle}`,
-  },
-];
-
-const linkClass =
-  "text-sm text-muted transition-colors hover:text-fg focus-visible:text-fg";
-
-function LinkColumn({
-  title,
-  links,
-}: {
-  title: string;
-  links: { title: string; href: string }[];
-}) {
-  return (
-    <div className="flex flex-col gap-4">
-      <p className="text-sm font-medium text-fg">{title}</p>
-      <ul className="flex flex-col gap-3">
-        {links.map(({ title, href }) => (
-          <li key={title}>
-            {/* Internal routes get next/link for client navigation; the
-                profile links are off-site and stay plain anchors. */}
-            {href.startsWith("/") ? (
-              <Link href={href} className={linkClass}>
-                {title}
-              </Link>
-            ) : (
-              <a
-                href={href}
-                target="_blank"
-                rel="noreferrer"
-                className={linkClass}
-              >
-                {title}
-              </a>
-            )}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
+/** The initials, for when there is no photo. Kept here rather than in the
+ *  content file because it is derived, not authored. */
+const initials = profile.name
+  .split(" ")
+  .map((part) => part[0])
+  .slice(0, 2)
+  .join("");
 
 export default function Footer() {
   return (
-    <footer className="border-t border-border bg-surface/40">
-      <div className="mx-auto max-w-7xl px-5 py-14 lg:px-8">
-        <div className="grid grid-cols-2 gap-x-8 gap-y-10 lg:grid-cols-12">
-          <div className="col-span-full flex flex-col gap-5 lg:col-span-5">
-            <div>
-              <p className="text-base font-semibold tracking-tight text-fg">
-                {profile.name}
-              </p>
-              <p className="mt-1 text-sm text-muted">{profile.role}</p>
-            </div>
-            <p className="max-w-sm text-sm leading-relaxed text-muted">
-              {profile.tagline}
+    <footer className="border-t border-border">
+      <div className="mx-auto flex max-w-3xl flex-col items-center px-5 py-16 text-center">
+        {/* Decorative divider. aria-hidden because "middle dot middle dot
+            middle dot" is not information. */}
+        <p aria-hidden="true" className="text-2xl tracking-[0.5em] text-muted">
+          &middot;&middot;&middot;
+        </p>
+
+        {/* The signature. A connected script is unreadable below about 2rem,
+            which is why the size is fixed here rather than left to a caller. */}
+        <p className="mt-6 font-script text-5xl leading-none text-fg">
+          {profile.name}
+        </p>
+
+        {peerlistUrl ? (
+          <iframe
+            src={peerlistUrl}
+            title={`${profile.name} on Peerlist`}
+            loading="lazy"
+            className="mt-8 h-[3.25rem] w-[13rem] border-0"
+          />
+        ) : null}
+
+        {/* --- Newsletter --- */}
+        <div className="mt-12 flex w-full flex-col items-center gap-4">
+          <div className="flex items-center gap-3">
+            {profile.avatar ? (
+              // Images are unoptimized on Workers; next/image adds nothing here.
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={profile.avatar}
+                alt=""
+                width={40}
+                height={40}
+                loading="lazy"
+                className="size-10 rounded-full object-cover"
+              />
+            ) : (
+              <span
+                aria-hidden="true"
+                className="flex size-10 items-center justify-center rounded-full bg-lime text-sm font-bold text-on-bright"
+              >
+                {initials}
+              </span>
+            )}
+            <p className="text-sm text-muted">
+              Get notified when I drop something new.
             </p>
-            <SocialLinks />
           </div>
 
-          <div className="hidden lg:col-span-1 lg:block" />
-
-          <div className="col-span-1 lg:col-span-2">
-            <LinkColumn title="Sitemap" links={sitemap} />
-          </div>
-
-          <div className="col-span-1 lg:col-span-2">
-            <LinkColumn title="Profiles" links={profiles} />
-          </div>
-
-          <div className="col-span-2 lg:col-span-2">
-            <div className="flex flex-col gap-4">
-              <p className="text-sm font-medium text-fg">Contact</p>
-              <ul className="flex flex-col gap-3">
-                <li>
-                  <a href={mailtoHref} className={linkClass}>
-                    {profile.email}
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href={profile.resumePath}
-                    target="_blank"
-                    rel="noreferrer"
-                    className={linkClass}
-                  >
-                    Resume (PDF)
-                  </a>
-                </li>
-                <li className="text-sm text-muted">{profile.location}</li>
-              </ul>
-            </div>
-          </div>
+          <NewsletterForm />
         </div>
 
-        <div className="mt-12 h-px bg-border" />
+        <div className="mt-10">
+          <SocialLinks />
+        </div>
 
-        <div className="mt-6 flex flex-col gap-2 text-center text-xs text-muted sm:flex-row sm:justify-between sm:text-left">
+        <div className="mt-10">
+          <VisitorCounter />
+        </div>
+
+        <div className="mt-10 h-px w-full bg-border" />
+
+        <div className="mt-6 space-y-1 text-xs text-muted">
           <p>
-            © {new Date().getFullYear()} {profile.name}. All rights reserved.
+            Built with{" "}
+            <span aria-label="love" role="img">
+              &hearts;
+            </span>{" "}
+            by{" "}
+            <a
+              href={mailtoHref}
+              className="underline underline-offset-2 transition-colors hover:text-fg"
+            >
+              {profile.name}
+            </a>{" "}
+            © {new Date().getFullYear()}. All rights reserved.
           </p>
           <p>
-            Built with Next.js, Tailwind CSS and Motion. Icons by{" "}
+            Next.js, Tailwind CSS and Motion, on Cloudflare Workers. Icons by{" "}
             <a
               href="https://lucide.dev"
               target="_blank"
@@ -146,7 +108,16 @@ export default function Footer() {
             >
               Lucide
             </a>{" "}
-            (ISC).
+            (ISC) and{" "}
+            <a
+              href="https://simpleicons.org"
+              target="_blank"
+              rel="noreferrer"
+              className="underline underline-offset-2 transition-colors hover:text-fg"
+            >
+              Simple Icons
+            </a>{" "}
+            (CC0).
           </p>
         </div>
       </div>

@@ -9,7 +9,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = profile.siteUrl.replace(/\/$/, "");
   const now = new Date();
 
-  const pages = ["", "/about", "/experience", "/skills", "/blog"];
+  // Public routes only. /vault and /views are deliberately absent: both are
+  // unlisted, both send robots noindex, and listing them here would undo that.
+  const pages = ["", "/work", "/projects", "/blog", "/contact", "/resume"];
   const posts = await getPosts();
 
   return [

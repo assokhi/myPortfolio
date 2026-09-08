@@ -109,6 +109,68 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* --- Grid paper ----------------------------------------------------------
+   One fixed layer behind everything: two 1px gradients crossed into graph
+   paper. It is drawn in --color-ink, so it inverts with the theme without a
+   second rule, and it sits at z-index -1 with pointer-events off so nothing
+   above it has to know it exists.
+
+   Two gradients rather than an SVG pattern: no request, no decode, and the
+   compositor can keep the whole thing on one layer while the page scrolls. */
+:root {
+  --grid-size: 64px;
+  --grid-opacity: 0.05;
+}
+
+:root[data-theme="light"] {
+  /* Black hairlines on a near-white page read heavier than white ones on a
+     near-black page at the same alpha. Pulled back so the grid stays a
+     texture rather than becoming a table. */
+  --grid-opacity: 0.035;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, var(--color-ink) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-ink) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+  opacity: var(--grid-opacity);
+}
+
+/* --- Custom cursor -------------------------------------------------------
+   An arrow drawn to match the theme: dark on the day page, light at night.
+   Each one carries a hairline of the opposite colour so it survives crossing
+   a photo or the hero gradient, where a flat single-colour arrow disappears.
+
+   Set on html, not on every element: links and buttons keep the UA's
+   `cursor: pointer`, which is the affordance that tells a visitor a thing is
+   clickable — replacing that with a plain arrow would be a usability
+   regression dressed as a design choice. */
+:root {
+  --cursor-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M5 2.5 18.5 12 12 13.2 15 20 12.6 21 9.6 14.2 5 18.5Z' fill='%23ededef' stroke='%230a0a0b' stroke-width='1.2' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+:root[data-theme="light"] {
+  --cursor-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M5 2.5 18.5 12 12 13.2 15 20 12.6 21 9.6 14.2 5 18.5Z' fill='%230a0a0b' stroke='%23fbfbfc' stroke-width='1.2' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+html {
+  cursor: var(--cursor-arrow) 4 2, auto;
+}
+
+/* A touch device has no cursor to replace, and a phone that reports both
+   (a tablet with a keyboard) is better served by the system one. */
+@media (pointer: coarse), (hover: none) {
+  html {
+    cursor: auto;
+  }
+}
+
 /* Focus is never invisible. Applies to every interactive element site-wide. */
 :focus-visible {
   outline: 2px solid var(--color-accent);
@@ -478,4 +540,76 @@ body {
     animation: none !important;
     transform: none !important;
   }
+}
+
+/* --- Route toast ---------------------------------------------------------
+   Entrance for components/ui/route-toast.tsx. Applied through Tailwind's
+   `motion-safe:` variant, so a visitor who asked for reduced motion gets the
+   toast in place rather than sliding — the notification still arrives, it just
+   does not move. */
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Entrance for each phrase in components/ui/rotating-tagline.tsx. Behind
+   `motion-safe:`, and the component stops rotating altogether under reduced
+   motion, so this never runs for a visitor who asked for stillness. */
+@keyframes tagline-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.4rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* --- Accordion -----------------------------------------------------------
+   Animating a <details> open used to need JavaScript. `::details-content`
+   plus `interpolate-size` lets CSS do it: the content box animates from zero
+   to its natural height, and `transition-behavior: allow-discrete` is what
+   keeps `content-visibility` from snapping the element into view before the
+   height has moved.
+
+   Per MDN this is Chrome 131+ and Safari 18.4+; Firefox opens instantly. That
+   is the intended fallback, not a bug — the row still opens everywhere, and
+   nothing is hidden from anyone. Same posture as .reveal above. */
+@supports selector(::details-content) {
+  .accordion {
+    interpolate-size: allow-keywords;
+  }
+
+  .accordion::details-content {
+    block-size: 0;
+    overflow: hidden;
+    transition:
+      block-size 320ms ease,
+      content-visibility 320ms allow-discrete;
+  }
+
+  .accordion[open]::details-content {
+    block-size: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .accordion::details-content {
+    transition: none !important;
+  }
+}
+
+/* The mobile menu is a modal <dialog>, which blocks interaction with the page
+   but does not stop it scrolling underneath. One rule does, with no JavaScript
+   and nothing to clean up on unmount — the selector stops matching the moment
+   the dialog closes. */
+html:has(dialog[open]) body {
+  overflow: hidden;
 }

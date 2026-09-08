@@ -1,0 +1,68 @@
+name: Refresh project screenshots
+
+# Screenshots the live URL of every entry in content/projects.ts and commits the
+# results to public/projects/. The project cards then reference committed files
+# rather than calling a screenshot API at render time — free, static, cached
+# like any other asset, and no third-party request on a page with an LCP budget.
+#
+# Runs weekly, because a project's UI does not change hourly. Trigger it by hand
+# from the Actions tab after shipping a redesign.
+#
+# Needs no secrets. It commits with the built-in GITHUB_TOKEN, so the repository
+# must allow Actions to write: Settings > Actions > General > Workflow
+# permissions > "Read and write permissions".
+
+on:
+  schedule:
+    - cron: "17 4 * * 1" # Mondays, 04:17 UTC
+  workflow_dispatch:
+
+# A second run while the first is mid-commit would race on the same files.
+concurrency:
+  group: project-shots
+  cancel-in-progress: false
+
+jobs:
+  shoot:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Installed here rather than in package.json on purpose: the playwright
+      # package downloads several hundred megabytes of browsers on install, and
+      # making every `npm ci` on every machine pay that for a weekly screenshot
+      # job is not a trade worth making. --no-save keeps package.json untouched
+      # so the commit step below has nothing extra to stage.
+      #
+      # Chromium only: installing all three engines triples the download for
+      # screenshots that are all taken in one of them.
+      - run: |
+          npm install --no-save playwright@1
+          npx playwright install --with-deps chromium
+
+      - name: Screenshot every project
+        run: node scripts/shoot-projects.ts
+
+      - name: Commit what changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/projects
+          # Nothing changed is the normal case most weeks, and it is a success,
+          # not a failure — `git commit` exits 1 on an empty staging area.
+          if git diff --staged --quiet; then
+            echo "No screenshot changes."
+            exit 0
+          fi
+          git commit -m "chore: refresh project screenshots"
+          git push

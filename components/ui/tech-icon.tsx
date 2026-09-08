@@ -62,7 +62,7 @@ function resolve(name: string): Icon | null {
 }
 
 /** Brand colours are chosen for white backgrounds. On this page a dark mark
- *  disappears: Next.js, Vercel and Express are pure black, and CSS's
+ *  disappears: Next.js and Express are pure black, and CSS's
  *  rebeccapurple or a dark green sit barely above the background.
  *
  *  Near-black falls back to the foreground colour — there is no brand hue left
@@ -101,7 +101,11 @@ function monogram(name: string): string {
   if (rest.length) {
     return [first, ...rest].map((w) => w[0]).join("").toUpperCase();
   }
-  return clean.length <= 7 ? clean : clean.slice(0, 6);
+  // A single long word becomes a real monogram rather than a truncation.
+  // Slicing produced "Script" for "Scriptivox", which reads as a rendering bug
+  // rather than a mark — and any entry hitting this branch should really have
+  // a logo file in content/ instead.
+  return clean.length <= 7 ? clean : clean[0].toUpperCase();
 }
 
 /** Just the mark. Falls back to a monogram when a brand has no icon
@@ -132,7 +136,9 @@ export function BrandMark({
         role="img"
         aria-label={name}
         className={cn(
-          "px-1 text-center font-mono text-[0.6rem] font-semibold leading-tight text-muted",
+          // inline-flex so the text is centred in whatever box the caller
+          // sized, rather than sitting on the baseline at the top of it.
+          "inline-flex items-center justify-center px-0.5 text-center font-mono text-[0.7rem] font-semibold leading-none text-muted",
           className,
         )}
       >
@@ -183,6 +189,24 @@ export default function TechIcon({
       >
         {name}
       </span>
+    </li>
+  );
+}
+
+/** The same brand mark as a labelled pill. Used wherever the name has to be
+ *  visible rather than revealed on hover — the tech-stack grid and the tech
+ *  rows on experience and project cards. A hover-only label is unusable on a
+ *  touch screen, which is most of this site's traffic. */
+export function TechPill({ name, className }: { name: string; className?: string }) {
+  return (
+    <li
+      className={cn(
+        "inline-flex items-center gap-2 rounded-full border border-ink/[0.08] bg-ink/5 px-3 py-1.5 text-sm text-fg",
+        className,
+      )}
+    >
+      <BrandMark name={name} className="size-4" />
+      {name}
     </li>
   );
 }

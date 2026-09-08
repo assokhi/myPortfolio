@@ -39,10 +39,20 @@ Cloudflare Workers Builds
      ▼
 Cloudflare Worker  (worker.ts)
      │
-     ├── /api/visitors ──────► Upstash Redis (REST)
+     ├── /api/visitors ──────► KV counter (Upstash until KV is bound)
+     ├── /api/blog-views ────► KV  (read every post's count)
+     ├── /api/blog-views/:s ─► KV  (record one read, deduped per IP+slug+day)
+     ├── /api/contact ───────► Turnstile → D1 → Resend
+     ├── /api/newsletter ────► Turnstile → D1
      │
      └── everything else ────► Workers Static Assets ──► out/
 ```
+
+Every binding is optional at runtime. With no KV or D1 bound, those endpoints
+answer `{ ok: false }` and the UI degrades — the counter badge hides itself,
+`/views` still lists every post without numbers, and the contact form tells the
+visitor to email instead. That is what lets the Worker be deployed before the
+namespaces exist.
 
 `next.config.ts` sets `output: "export"`, so `npm run build` writes plain
 HTML/CSS/JS, the blog pages, `out/opengraph-image`, `out/sitemap.xml` and the
@@ -63,14 +73,36 @@ Local development (`.env`, gitignored — `cp .env.example .env`):
 | Variable | Used by | Needed for |
 |---|---|---|
 | `GITHUB_TOKEN` | build | Contribution calendar; without it GitHub still answers, but unauthenticated (60 req/hour) and with no calendar |
-| `UPSTASH_REDIS_REST_URL` | `worker.ts` | Visitor counter under `npm run preview` |
+| `UPSTASH_REDIS_REST_URL` | `worker.ts` | Visitor counter under `npm run preview` (until KV is bound) |
 | `UPSTASH_REDIS_REST_TOKEN` | `worker.ts` | Same |
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | build | Renders the Turnstile widget. Absent = no widget, and the Worker skips the check to match |
+| `TURNSTILE_SECRET_KEY` | `worker.ts` | Server-side token verification |
+| `RESEND_API_KEY` | `worker.ts` | Contact-form email delivery |
+| `CONTACT_TO_EMAIL` | `worker.ts` | Where contact mail is sent |
+| `NEXT_PUBLIC_PEERLIST_URL` | build | Optional footer embed; omitted entirely when unset |
 
 Production (nothing secret is committed — see [Deployment](#deployment)):
 
 - `GITHUB_TOKEN` — Workers Builds **build variable** (encrypted). Build time only.
-- `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` — **Worker secrets**.
-  Runtime only, never reach the browser.
+- `NEXT_PUBLIC_TURNSTILE_SITE_KEY` — Workers Builds **build variable**. Public
+  by design; it is rendered into the page.
+- `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, `TURNSTILE_SECRET_KEY`,
+  `RESEND_API_KEY`, `CONTACT_TO_EMAIL` — **Worker secrets**. Runtime only, never
+  reach the browser.
+
+### Storage, once you have the ids
+
+`wrangler.jsonc` deliberately declares no KV or D1 binding yet: a placeholder id
+there fails the next deploy, and `main` deploys on push. To switch the backends
+on:
+
+1. `npx wrangler kv namespace create KV` and
+   `npx wrangler d1 create portfolio_db`.
+2. Add both to `wrangler.jsonc` (`binding: "KV"` and `binding: "DB"`).
+3. `npx wrangler types` to regenerate `worker-configuration.d.ts`.
+4. `npx wrangler d1 execute portfolio_db --remote --file=db/schema.sql`.
+5. Deploy. The counter moves off Upstash automatically — `worker.ts` prefers KV
+   whenever it is bound.
 
 Everything public — usernames, links, email — lives in `content/profile.ts`.
 

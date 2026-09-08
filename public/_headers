@@ -22,3 +22,19 @@
 
 /api/verifications
   Content-Type: application/json; charset=utf-8
+
+# Content-hashed build output: the filename changes whenever the bytes do, so a
+# one-year immutable cache is safe and a revalidation is pure waste. Without
+# this rule Wrangler serves these `max-age=0, must-revalidate` and every repeat
+# visitor re-checks every chunk (confirmed against the live deployment).
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Unlisted pages. The meta robots tag in each page covers crawlers that render
+# HTML; this header covers the ones that only read headers, and any direct hit
+# on the .txt payload Next writes beside each route.
+/vault
+  X-Robots-Tag: noindex, nofollow
+
+/views
+  X-Robots-Tag: noindex, nofollow

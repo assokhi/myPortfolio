@@ -8,7 +8,7 @@ export const skills: Skills = {
       name: "Next.js + TypeScript + PostgreSQL",
       description:
         "My default for anything with users and data. Server components for the reads, route handlers for the writes, SQL I can actually explain.",
-      tech: ["Next.js", "TypeScript", "PostgreSQL", "Prisma", "Vercel"],
+      tech: ["Next.js", "TypeScript", "PostgreSQL", "Prisma", "Cloudflare"],
     },
     {
       name: "React + Tailwind CSS",
@@ -28,6 +28,6 @@ export const skills: Skills = {
     Frontend: ["React", "Next.js", "Tailwind CSS", "Motion", "Vite"],
     Backend: ["Node.js", "Express", "REST", "GraphQL", "Zod"],
     Data: ["PostgreSQL", "MongoDB", "Redis", "Prisma"],
-    Tooling: ["Git", "Docker", "GitHub Actions", "Vercel", "Vitest", "Figma"],
+    Tooling: ["Git", "Docker", "GitHub Actions", "Cloudflare", "Vitest", "Figma"],
   },
 };

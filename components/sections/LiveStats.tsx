@@ -1,5 +1,5 @@
 import { getGithub, getLeetcode, getCodeforces, getVerifications } from "@/lib/stats";
-import { StatCard, HeroStat, StatRow, StatUnavailable } from "./StatCard";
+import { StatCard, HeroStat, StatRow, StatUnavailable, type Tone } from "./StatCard";
 import CountUp from "@/components/ui/count-up";
 import { formatDate } from "@/lib/dates";
 import { profile } from "@/content/profile";
@@ -27,13 +27,20 @@ const PROFILE_URL = {
 
 const nf = new Intl.NumberFormat("en-GB");
 
-type CardProps = { compact?: boolean; className?: string };
+type CardProps = {
+  compact?: boolean;
+  className?: string;
+  /** Which StatCard treatment to use. Defaults to StatCard's own "white"
+   *  inverted tile; the Activity row on the home page passes "dark" so three
+   *  of them in a row do not read as three inverted slabs. */
+  tone?: Tone;
+};
 
-export async function GithubCard({ compact, className }: CardProps = {}) {
+export async function GithubCard({ compact, className, tone }: CardProps = {}) {
   const res = await getGithub();
   if (!res.ok) {
     return (
-      <StatCard title="GitHub" href={PROFILE_URL.github} stale className={className}>
+      <StatCard title="GitHub" href={PROFILE_URL.github} stale className={className} tone={tone}>
         <StatUnavailable what="Repo and commit counts" />
       </StatCard>
     );
@@ -46,7 +53,7 @@ export async function GithubCard({ compact, className }: CardProps = {}) {
       className={className}
       footerLeft={
         /* Badges ride the footer line so the chip centres against them rather
-           than hanging below. Plain <img>: 64px assets straight off GitHub's
+           than hanging below. Plain <img tone={tone}>: 64px assets straight off GitHub's
            CDN, already optimised, and routing them through next/image would
            mean a remotePatterns entry for no saved bytes. */
         g.achievements.length ? (
@@ -118,11 +125,11 @@ export async function GithubCard({ compact, className }: CardProps = {}) {
   );
 }
 
-export async function LeetcodeCard({ className }: CardProps = {}) {
+export async function LeetcodeCard({ className, tone }: CardProps = {}) {
   const res = await getLeetcode();
   if (!res.ok) {
     return (
-      <StatCard title="LeetCode" href={PROFILE_URL.leetcode} stale className={className}>
+      <StatCard title="LeetCode" href={PROFILE_URL.leetcode} stale className={className} tone={tone}>
         <StatUnavailable what="Solved-problem counts" />
       </StatCard>
     );
@@ -133,7 +140,7 @@ export async function LeetcodeCard({ className }: CardProps = {}) {
       title="LeetCode"
       href={l.profileUrl}
       className={className}
-    >
+    tone={tone}>
       <HeroStat value={<CountUp value={l.total} />} label="Problems solved" />
       <div className="mt-3">
         <StatRow
@@ -148,11 +155,11 @@ export async function LeetcodeCard({ className }: CardProps = {}) {
   );
 }
 
-export async function CodeforcesCard({ className }: CardProps = {}) {
+export async function CodeforcesCard({ className, tone }: CardProps = {}) {
   const res = await getCodeforces();
   if (!res.ok) {
     return (
-      <StatCard title="Codeforces" href={PROFILE_URL.codeforces} stale className={className}>
+      <StatCard title="Codeforces" href={PROFILE_URL.codeforces} stale className={className} tone={tone}>
         <StatUnavailable what="Contest rating" />
       </StatCard>
     );
@@ -163,7 +170,7 @@ export async function CodeforcesCard({ className }: CardProps = {}) {
       title="Codeforces"
       href={c.profileUrl}
       className={className}
-    >
+    tone={tone}>
       <HeroStat
         value={c.rating === null ? "—" : <CountUp value={c.rating} />}
         label="Contest rating"
@@ -183,11 +190,11 @@ export async function CodeforcesCard({ className }: CardProps = {}) {
   );
 }
 
-export async function CertificationsCard({ compact, className }: CardProps = {}) {
+export async function CertificationsCard({ compact, className, tone }: CardProps = {}) {
   const res = await getVerifications();
   if (!res.ok || res.data.items.length === 0) {
     return (
-      <StatCard title="Certifications" href={certifications[0]?.verifyUrl} stale={!res.ok} className={className}>
+      <StatCard title="Certifications" href={certifications[0]?.verifyUrl} stale={!res.ok} className={className} tone={tone}>
         <StatUnavailable what="Verified certificates" />
       </StatCard>
     );
@@ -198,7 +205,7 @@ export async function CertificationsCard({ compact, className }: CardProps = {})
       title="Certifications"
       href={items[0]?.verifyUrl}
       className={className}
-    >
+    tone={tone}>
       <HeroStat value={<CountUp value={items.length} />} label="Verified" />
       {/* Three at most, whatever the page: a fourth line makes this tile a head
           taller than the three beside it and the row goes lopsided. The rest

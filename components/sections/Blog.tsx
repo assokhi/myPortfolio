@@ -3,7 +3,6 @@ import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import type { PostMeta } from "@/content/types";
 import { formatDate } from "@/lib/dates";
-import Section from "./Section";
 import BoldOnHover from "@/components/ui/bold-on-hover";
 
 /** date · N min read — the one metadata line every post surface uses, so the
@@ -185,68 +184,3 @@ export function PostList({ posts, startIndex = 1 }: { posts: PostMeta[]; startIn
  *  ones peeking out beneath. Hover or keyboard focus lifts a card clear of the
  *  pile. DOM order is newest-first, so a screen reader gets the same ranking
  *  the stack draws. */
-export function PostStack({ posts }: { posts: PostMeta[] }) {
-  return (
-    <ol className="pb-2">
-      {posts.map((p, i) => (
-        <li
-          key={p.slug}
-          // Overlap tucks each card under the one above it; the descending
-          // z-index keeps the newest on top of the pile.
-          style={{ marginTop: i === 0 ? 0 : "-1.5rem", zIndex: posts.length - i }}
-          className="relative"
-        >
-          <article className="group relative rounded-2xl border border-border bg-surface/95 p-5 shadow-[0_-10px_30px_var(--sheet-shadow)] backdrop-blur-sm transition-transform duration-200 focus-within:-translate-y-2 hover:-translate-y-2 sm:p-6">
-            <div className="flex items-start justify-between gap-4">
-              <div className="min-w-0">
-                <div className="flex flex-wrap items-center gap-3">
-                  <span aria-hidden="true" className="font-mono text-xs text-border">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <TagPills tags={p.tags} />
-                </div>
-                <h3 className="mt-3 text-xl font-semibold leading-tight text-fg sm:text-2xl">
-                  <Link href={`/blog/${p.slug}`} className="underline-offset-4 hover:underline">
-                    <span className="absolute inset-0" aria-hidden="true" />
-                    <BoldOnHover text={p.title} from={600} />
-                  </Link>
-                </h3>
-                <div className="mt-2">
-                  <PostMetaLine post={p} withTags={false} />
-                </div>
-              </div>
-
-              <div className="flex shrink-0 items-center gap-4">
-                {/* The thumbnail is the first thing to go on a narrow screen —
-                    the title is what ranks the stack, not the picture. */}
-                <Cover
-                  post={p}
-                  sizes="128px"
-                  className="hidden h-20 w-32 rounded-xl sm:block"
-                />
-                <ArrowBadge className="border border-border bg-bg" />
-              </div>
-            </div>
-          </article>
-        </li>
-      ))}
-    </ol>
-  );
-}
-
-/** Hidden entirely when there are no posts — an empty blog reads worse than
- *  no blog. */
-export default function Blog({ posts }: { posts: PostMeta[] }) {
-  if (posts.length === 0) return null;
-  return (
-    <Section
-      id="blog"
-      title="Blog"
-      intro="Things I worked out the hard way and wrote down. Newest on top."
-      href="/blog"
-      hrefLabel="All posts"
-    >
-      <PostStack posts={posts.slice(0, 4)} />
-    </Section>
-  );
-}

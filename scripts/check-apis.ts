@@ -1,5 +1,5 @@
 /**
- * Calls all five endpoints against a running server and validates each
+ * Calls every endpoint against a running server and validates each
  * response with the same schemas the routes use.
  *
  *   npm run build          # writes the four static stats JSON files to out/
@@ -20,6 +20,7 @@ import {
   codeforcesStats,
   verifications,
   visitorCount,
+  blogViews,
 } from "../lib/schemas.ts";
 
 const BASE = process.env.CHECK_BASE_URL ?? "http://localhost:3000";
@@ -30,6 +31,10 @@ const endpoints = [
   { path: "/api/codeforces", schema: codeforcesStats },
   { path: "/api/verifications", schema: verifications },
   { path: "/api/visitors", schema: visitorCount },
+  // Runtime, in worker.ts. Answers ok:false until the KV namespace is bound,
+  // which is still a PASS here: a degraded endpoint returning the documented
+  // fallback shape is the behaviour being asserted.
+  { path: "/api/blog-views", schema: blogViews },
 ] as const;
 
 let failed = 0;
@@ -67,5 +72,9 @@ for (const { path, schema } of endpoints) {
   }
 }
 
-console.log(failed === 0 ? "\nAll five endpoints OK." : `\n${failed} failed.`);
+console.log(
+  failed === 0
+    ? `\nAll ${endpoints.length} endpoints OK.`
+    : `\n${failed} failed.`,
+);
 process.exit(failed === 0 ? 0 : 1);

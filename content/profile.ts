@@ -34,6 +34,23 @@ export const profile: Profile = {
     },
     { label: "Learning", value: "Rust — slowly, and badly", icon: "graduation-cap" },
   ],
+  // TODO(you): the hero cycles these under your name, one every few seconds.
+  // Keep them short and specific — "AI Enthusiast" says nothing, "Ships on
+  // Fridays" says something.
+  taglines: [
+    "Full-Stack Engineer",
+    "TypeScript on both sides",
+    "Open to full-time SDE roles",
+    "Mathematics geek",
+  ],
+  // First one is the form's default.
+  contactSubjects: ["Say Hello", "Project Inquiry", "Collaboration", "Other"],
+  flagship: {
+    href: "https://github.com/assokhi/myPortfolio",
+    title: "This portfolio",
+    pitch: "Static export on Cloudflare Workers. 882ms LCP, 0.00 CLS.",
+    cta: "View source",
+  },
   interests: [
     { label: "Chess", icon: "puzzle" },
     { label: "Filter coffee", icon: "coffee" },
@@ -54,7 +71,7 @@ export const profile: Profile = {
   githubUsername: "assokhi",
   leetcodeUsername: "Arvinder_Singh_Sokhi",
   codeforcesHandle: "ArvinderSinghSokhi",
-  siteUrl: "https://assokhi.vercel.app",
+  siteUrl: "https://myportfolio.singhsokhiarvinder.workers.dev",
 };
 
 /** mailto: with the subject prefilled. Used by Contact and the Footer. */
