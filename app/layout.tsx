@@ -1,27 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Great_Vibes, Lora } from "next/font/google";
+import { Jost } from "next/font/google";
 import { profile } from "@/content/profile";
 import Header from "@/components/sections/Header";
 import Footer from "@/components/sections/Footer";
 import "./globals.css";
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
-// Body-copy serif — see --font-serif in globals.css. display: "swap" so text
-// paints in the fallback immediately rather than waiting on the request.
-const lora = Lora({ variable: "--font-lora", subsets: ["latin"], display: "swap" });
-
-// The display script: every section and page heading (see `displayHeading` in
-// lib/utils.ts) plus the signature under the About blurb. preload: false on
-// purpose — the home hero is the LCP element and is set in Geist, so
-// preloading this would put a second font request in front of it. Headings
-// paint in the size-adjusted fallback next/font generates, then swap.
-const greatVibes = Great_Vibes({
-  variable: "--font-great-vibes",
+// The one typeface for the whole site — see .claude/rules/design-system.md.
+// The hero h1 is the LCP element and is set in this face, so it is preloaded
+// (next/font's default) rather than deferred.
+const jost = Jost({
+  variable: "--font-jost",
   subsets: ["latin"],
-  weight: "400",
+  weight: ["400", "500", "700", "900"],
   display: "swap",
-  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -48,8 +39,8 @@ export const metadata: Metadata = {
  *  instead of contradicting it. Each value is the matching --color-bg. */
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#fbfbfc" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a0b" },
+    { media: "(prefers-color-scheme: light)", color: "#fdfdfd" },
+    { media: "(prefers-color-scheme: dark)", color: "#101219" },
   ],
 };
 
@@ -58,20 +49,20 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} ${greatVibes.variable} ${lora.variable} h-full antialiased`}
+      className={`${jost.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-bg text-fg">
         {/* First thing in the body so the attribute is set before anything
             below it paints. It cannot live in a component: a React effect runs
             after the first paint, which is exactly the flash this avoids.
-            Night is the default palette, so a visitor who has chosen nothing
-            (and anyone with JS off) needs no attribute at all — only an
-            explicit "light" is replayed, and the system preference decides
-            for a first visit. */}
+            The OS preference now resolves entirely in CSS (globals.css), so
+            this script only has a job when a visitor has explicitly overridden
+            it via the toggle — nothing to do, and no matchMedia call, on a
+            first visit or with JS off. */}
         <script
           dangerouslySetInnerHTML={{
             __html:
-              'try{var t=localStorage.getItem("theme");if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";document.documentElement.dataset.theme=t}catch(e){}',
+              'try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}',
           }}
         />
         <a

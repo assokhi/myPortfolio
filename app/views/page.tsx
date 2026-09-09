@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getPosts } from "@/lib/blog";
-import { displayHeading } from "@/lib/utils";
+import { cn, heading1, pageShell, proseMeasure } from "@/lib/utils";
 import ViewsTable from "@/components/sections/ViewsTable";
 
 export const metadata: Metadata = {
@@ -20,9 +20,9 @@ export default async function ViewsPage() {
   const posts = await getPosts();
 
   return (
-    <div className="mx-auto w-full max-w-2xl px-5 pt-10 pb-20">
-      <h1 className={displayHeading}>Popular posts</h1>
-      <p className="mt-3 font-serif text-muted">
+    <div className={pageShell}>
+      <h1 className={heading1}>Popular posts</h1>
+      <p className={cn("mt-3 text-muted", proseMeasure)}>
         Read counts, deduplicated per visitor per day.
       </p>
 

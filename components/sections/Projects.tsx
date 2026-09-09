@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { projects } from "@/content/projects";
-import { cn, sectionLabel } from "@/lib/utils";
+import { cn, heading2, pageShell } from "@/lib/utils";
 import { TechPill } from "@/components/ui/tech-icon";
 import CoverImage from "@/components/ui/cover-image";
 
@@ -51,13 +51,13 @@ export default function Projects({
     <section
       id={id}
       aria-labelledby={`${id}-heading`}
-      className="reveal mx-auto w-full max-w-6xl px-5 py-14"
+      className={cn("reveal", pageShell)}
     >
-      <Heading id={`${id}-heading`} className={cn(sectionLabel, "mb-10 block")}>
+      <Heading id={`${id}-heading`} className={cn(heading2, "mb-8 block")}>
         Projects
       </Heading>
 
-      <div className="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {shown.map((project, i) => {
           const cover = project.image;
 

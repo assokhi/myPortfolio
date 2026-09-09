@@ -54,8 +54,8 @@ export default function BlogFilter({ posts }: { posts: PostMeta[] }) {
               onClick={() => setActive(chip.label)}
               className={
                 isActive
-                  ? "rounded-full bg-accent px-3 py-1 font-mono text-xs text-bg"
-                  : "rounded-full border border-border px-3 py-1 font-mono text-xs text-muted transition-colors hover:border-accent-2 hover:text-fg"
+                  ? "inline-flex min-h-11 items-center rounded-full bg-accent px-4 text-sm font-medium tracking-wide text-bg"
+                  : "inline-flex min-h-11 items-center rounded-full border border-border px-4 text-sm font-medium tracking-wide text-muted transition-colors hover:border-accent-2 hover:text-fg"
               }
             >
               {chip.label}{" "}

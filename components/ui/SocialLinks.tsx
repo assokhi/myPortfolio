@@ -12,7 +12,7 @@ const icons = {
 };
 
 const tile =
-  "group relative flex size-10 items-center justify-center rounded-lg border border-border text-muted transition-colors hover:border-accent hover:text-accent";
+  "group relative flex size-11 items-center justify-center rounded-lg border border-border text-muted transition-colors hover:border-accent hover:text-accent";
 const tooltip =
   "pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 rounded-md border border-border bg-surface px-2 py-1 text-xs font-medium text-fg opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100";
 

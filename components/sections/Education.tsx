@@ -3,7 +3,7 @@ import { education } from "@/content/education";
 import { courses } from "@/content/courses";
 import { books } from "@/content/books";
 import { formatRange } from "@/lib/dates";
-import { cn, cardSurface, sectionLabel } from "@/lib/utils";
+import { cn, cardSurface, heading2, pageShell } from "@/lib/utils";
 import Accordion from "@/components/ui/accordion";
 import CardLogo from "@/components/ui/card-logo";
 
@@ -14,9 +14,9 @@ export default async function Education({ id = "education" }: { id?: string }) {
     <section
       id={id}
       aria-labelledby={`${id}-heading`}
-      className="reveal mx-auto w-full max-w-4xl px-5 py-14"
+      className={cn("reveal", pageShell)}
     >
-      <h2 id={`${id}-heading`} className={cn(sectionLabel, "mb-6 block")}>
+      <h2 id={`${id}-heading`} className={cn(heading2, "mb-8 block")}>
         Education
       </h2>
 
@@ -105,7 +105,7 @@ export default async function Education({ id = "education" }: { id?: string }) {
       {courses.length ? (
         <div className="mt-4">
           <p className="mb-3 text-sm font-medium text-fg">Courses</p>
-          <div className="grid gap-4 sm:grid-cols-3">
+          <div className="grid gap-8 sm:grid-cols-3">
             {courses.map((course) => (
               <div
                 key={course.name}

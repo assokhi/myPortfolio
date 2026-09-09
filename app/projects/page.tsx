@@ -9,9 +9,5 @@ export const metadata: Metadata = {
 };
 
 export default function ProjectsPage() {
-  return (
-    <div className="no-grid-paper pt-6 pb-10">
-      <Projects headingLevel="h1" id="all-projects" />
-    </div>
-  );
+  return <Projects headingLevel="h1" id="all-projects" />;
 }

@@ -1,7 +1,7 @@
 import { ExternalLink } from "lucide-react";
 import { experience } from "@/content/experience";
 import { formatRange } from "@/lib/dates";
-import { cn, sectionLabel } from "@/lib/utils";
+import { cn, heading2, pageShell } from "@/lib/utils";
 import Accordion from "@/components/ui/accordion";
 import { TechPill } from "@/components/ui/tech-icon";
 import CardLogo from "@/components/ui/card-logo";
@@ -27,9 +27,9 @@ export default function Experience({
     <section
       id={id}
       aria-labelledby={`${id}-heading`}
-      className="reveal mx-auto w-full max-w-4xl px-5 py-14"
+      className={cn("reveal", pageShell)}
     >
-      <Heading id={`${id}-heading`} className={cn(sectionLabel, "mb-6 block")}>
+      <Heading id={`${id}-heading`} className={cn(heading2, "mb-8 block")}>
         Experience
       </Heading>
 

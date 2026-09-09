@@ -9,6 +9,10 @@ export const alt = `${profile.name} — ${profile.role}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
+// ponytail: system sans-serif, not Jost — Satori needs actual font bytes
+// (an ImageResponse `fonts` fetch), which is real work for a card almost
+// nobody sees at full size. Upgrade by fetching the Jost .ttf at build time
+// if brand fidelity here ever matters.
 export default function OpengraphImage() {
   return new ImageResponse(
     (
@@ -20,17 +24,17 @@ export default function OpengraphImage() {
           flexDirection: "column",
           justifyContent: "center",
           padding: "80px",
-          background: "linear-gradient(135deg, #0a0a0b 0%, #141417 55%, #26262b 100%)",
-          color: "#ededef",
+          background: "#fdfdfd",
+          color: "#1E2740",
           fontFamily: "sans-serif",
         }}
       >
-        <div style={{ fontSize: 28, color: "#ffffff" }}>{profile.location}</div>
-        <div style={{ fontSize: 76, fontWeight: 700, marginTop: 16 }}>
+        <div style={{ fontSize: 28, color: "#565571" }}>{profile.location}</div>
+        <div style={{ fontSize: 76, fontWeight: 900, marginTop: 16 }}>
           {profile.name}
         </div>
-        <div style={{ fontSize: 40, marginTop: 8 }}>{profile.role}</div>
-        <div style={{ fontSize: 26, color: "#a2a2ad", marginTop: 28, maxWidth: 900 }}>
+        <div style={{ fontSize: 40, fontWeight: 700, marginTop: 8 }}>{profile.role}</div>
+        <div style={{ fontSize: 26, color: "#565571", marginTop: 28, maxWidth: 900 }}>
           {profile.tagline}
         </div>
       </div>

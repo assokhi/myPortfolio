@@ -21,26 +21,6 @@ export const navItems = [
   { href: "/resume", label: "Resume" },
 ];
 
-/** How far you scroll before the bar collapses into the pill. Small enough
- *  that it happens on the first flick, large enough that a one-pixel rubber
- *  band at the top of iOS does not trigger it. */
-const COLLAPSE_AT = 32;
-
-function useCollapsed() {
-  const [collapsed, setCollapsed] = useState(false);
-
-  useEffect(() => {
-    // Read once on mount too: a reload restores scroll position, and the
-    // listener alone would leave the bar flat halfway down the page.
-    const read = () => setCollapsed(window.scrollY > COLLAPSE_AT);
-    read();
-    window.addEventListener("scroll", read, { passive: true });
-    return () => window.removeEventListener("scroll", read);
-  }, []);
-
-  return collapsed;
-}
-
 /** True for the item matching the current route. "/" must match exactly or
  *  every route lights it up; everything else matches its subtree, so
  *  /blog/some-post still marks Blog as current. */
@@ -52,7 +32,6 @@ function isCurrent(href: string, pathname: string) {
 
 export function SiteNav() {
   const pathname = usePathname();
-  const collapsed = useCollapsed();
   // Derived, not stored: the menu is open when it was opened ON the route
   // currently displayed. A route change therefore closes it by arithmetic
   // rather than by an effect that calls setState — which is both a cascading
@@ -90,38 +69,9 @@ export function SiteNav() {
 
   return (
     <>
-      <nav
-        aria-label="Main"
-        className={cn(
-          "mx-auto flex items-center gap-1",
-          // The whole flat-to-pill move is CSS transitions on a handful of
-          // properties. No animation library, and the global reduced-motion
-          // rule in globals.css already flattens transition-duration to
-          // nothing, so this needs no guard of its own.
-          "transition-[max-width,border-radius,background-color,border-color,box-shadow,padding] duration-300 ease-out",
-          collapsed
-            ? [
-                // Glass pill: translucent fill, blurred backdrop, a hairline
-                // edge and an inner top highlight. The highlight is what sells
-                // it on a dark page, where there is often too little behind the
-                // bar for the blur to show.
-                "max-w-fit rounded-full border border-ink/10 bg-surface/50 px-2 py-2",
-                "shadow-[inset_0_1px_0_0_var(--glass-highlight),0_16px_40px_-12px_var(--glass-drop)]",
-                "backdrop-blur-xl backdrop-saturate-150",
-              ]
-            : [
-                // Flat: full width, square, no fill. Only a hairline underline
-                // separates it from the page.
-                "w-full max-w-6xl rounded-none border-b border-ink/[0.06] bg-transparent px-1 py-3",
-              ],
-          // On a phone the bar is only ever the two controls, so the pill
-          // treatment would be a bubble around a hamburger. Stay flat and let
-          // the controls sit at the right edge — the glass strip itself is on
-          // Header's outer element, which is full-bleed; this row just has to
-          // stay transparent so that shows through instead of boxing it in.
-          "max-sm:w-full max-sm:max-w-none max-sm:justify-end max-sm:rounded-none max-sm:border-none max-sm:bg-transparent max-sm:p-0 max-sm:shadow-none max-sm:backdrop-blur-none",
-        )}
-      >
+      {/* Flat text menu, full width, no border, no fill — the reference has
+          no nav pill, no scroll-collapse and no glass. */}
+      <nav aria-label="Main" className="mx-auto flex w-full max-w-[71.25rem] items-center gap-1 px-5 py-3">
         {/* Six text links, hidden on phones where they do not fit on one line.
             They are still in the DOM inside the dialog below, so a crawler
             reads the same six links at every viewport. */}
@@ -146,14 +96,14 @@ export function SiteNav() {
           })}
         </div>
 
-        <ThemeToggle className={cn(!collapsed && "sm:ml-auto")} />
+        <ThemeToggle className="sm:ml-auto" />
 
         <button
           type="button"
           onClick={() => setMenuOpen(true)}
           aria-expanded={menuOpen}
           aria-controls="mobile-menu"
-          className="flex size-10 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface hover:text-fg sm:hidden"
+          className="flex size-11 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface hover:text-fg sm:hidden"
         >
           <Menu size={22} aria-hidden="true" />
           {/* The button is an icon, so its name has to be written down. */}
@@ -173,11 +123,7 @@ export function SiteNav() {
         className={cn(
           // A modal dialog is centred by the UA; these override it to fill the
           // screen. `open:` because the styles must not apply while closed.
-          // bg tint plus backdrop-blur on the dialog itself, rather than a
-          // filter on <body>: elements in the top layer are not affected by an
-          // ancestor's filter, so blurring the body is both unnecessary and
-          // unreliable across engines. This blurs exactly what is behind.
-          "m-0 h-full max-h-none w-full max-w-none bg-bg/80 p-0 text-fg backdrop-blur-xl backdrop:bg-transparent",
+          "m-0 h-full max-h-none w-full max-w-none bg-bg p-0 text-fg backdrop:bg-transparent",
           "open:flex open:flex-col open:items-center open:justify-center",
           "motion-safe:open:animate-[toast-in_180ms_ease-out]",
           "sm:hidden",
@@ -186,7 +132,7 @@ export function SiteNav() {
         <button
           type="button"
           onClick={() => setMenuOpen(false)}
-          className="absolute top-5 right-6 flex size-10 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface hover:text-fg"
+          className="absolute top-5 right-6 flex size-11 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface hover:text-fg"
         >
           <X size={24} aria-hidden="true" />
           <span className="sr-only">Close menu</span>
@@ -202,7 +148,7 @@ export function SiteNav() {
                   aria-current={active ? "page" : undefined}
                   onClick={() => setMenuOpen(false)}
                   className={cn(
-                    "text-3xl font-semibold transition-colors",
+                    "text-3xl font-bold tracking-[-0.01em] transition-colors",
                     active
                       ? "text-fg underline decoration-2 underline-offset-8"
                       : "text-muted hover:text-fg",

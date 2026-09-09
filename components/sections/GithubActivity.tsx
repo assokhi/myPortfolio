@@ -1,4 +1,4 @@
-import { cn, sectionLabel } from "@/lib/utils";
+import { cn, heading2, pageShell } from "@/lib/utils";
 import ContributionCalendar from "@/components/sections/ContributionCalendar";
 import {
   GithubCard,
@@ -21,16 +21,17 @@ export default async function GithubActivity({ id = "activity" }: { id?: string 
     <section
       id={id}
       aria-labelledby={`${id}-heading`}
-      className="reveal mx-auto w-full max-w-4xl px-5 py-14"
+      className={cn("reveal", pageShell)}
     >
-      <h2 id={`${id}-heading`} className={cn(sectionLabel, "mb-6 block")}>
+      <h2 id={`${id}-heading`} className={cn(heading2, "mb-8 block")}>
         Activity
       </h2>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-8 sm:grid-cols-3">
         {/* tone="dark" rather than StatCard's default inverted tile: three
-            white slabs in a row dominated a page whose whole backdrop is grid
-            paper. Same component, same contrast rules, quieter treatment. */}
+            white slabs in a row read as three loud tiles against the
+            reference's flat page. Same component, same contrast rules,
+            quieter treatment. */}
         <GithubCard compact tone="dark" />
         <LeetcodeCard tone="dark" />
         <CodeforcesCard tone="dark" />

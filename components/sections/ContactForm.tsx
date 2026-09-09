@@ -4,7 +4,6 @@ import { useState } from "react";
 import Script from "next/script";
 import { Send } from "lucide-react";
 import { profile, mailtoHref } from "@/content/profile";
-import { useClickSound } from "@/lib/use-click-sound";
 
 type State = "idle" | "sending" | "done" | "error";
 
@@ -20,11 +19,9 @@ const SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 export default function ContactForm() {
   const [state, setState] = useState<State>("idle");
   const [message, setMessage] = useState("");
-  const click = useClickSound();
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    click();
     setState("sending");
 
     const form = new FormData(event.currentTarget);

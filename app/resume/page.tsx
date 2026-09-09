@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Download, ExternalLink } from "lucide-react";
 import { profile } from "@/content/profile";
-import { cn, displayHeading } from "@/lib/utils";
+import { cn, heading1, pageShell, proseMeasure } from "@/lib/utils";
 import RouteToast from "@/components/ui/route-toast";
 
 export const metadata: Metadata = {
@@ -15,9 +15,9 @@ const buttonClass =
 
 export default function ResumePage() {
   return (
-    <div className="mx-auto w-full max-w-4xl px-5 pt-10 pb-20">
-      <h1 className={displayHeading}>Resume</h1>
-      <p className="mt-3 max-w-xl font-serif text-muted">
+    <div className={pageShell}>
+      <h1 className={heading1}>Resume</h1>
+      <p className={cn("mt-3 text-muted", proseMeasure)}>
         The one-page version. Open it in a new tab or download it — the viewer
         below is the same file.
       </p>

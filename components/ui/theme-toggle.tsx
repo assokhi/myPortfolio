@@ -28,7 +28,7 @@ export default function ThemeToggle({ className }: { className?: string }) {
         } catch {}
       }}
       className={cn(
-        "flex h-10 min-w-[36px] items-center justify-center rounded-full border border-border px-2 text-muted transition-[color,background-color,transform] duration-200 hover:bg-surface hover:text-fg active:scale-[0.97] sm:min-w-[44px] sm:px-3",
+        "flex size-11 items-center justify-center rounded-full border border-border text-muted transition-[color,background-color,transform] duration-200 hover:bg-surface hover:text-fg active:scale-[0.97]",
         className,
       )}
     >

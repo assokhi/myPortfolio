@@ -37,7 +37,6 @@ export default async function Home() {
           description={latest.summary}
           href={`/blog/${latest.slug}`}
           cta="Read article"
-          cover={latest.cover}
         />
       ) : null}
     </>

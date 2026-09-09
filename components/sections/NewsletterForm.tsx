@@ -1,27 +1,33 @@
 "use client";
 
 import { useState } from "react";
+import Script from "next/script";
 import { Send } from "lucide-react";
-import { useClickSound } from "@/lib/use-click-sound";
 
 type State = "idle" | "sending" | "done" | "error";
+
+/** Same pair as ContactForm.tsx — see the comment there. Empty at build time
+ *  means Turnstile was not configured, and the widget is skipped entirely. */
+const SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
 export default function NewsletterForm() {
   const [email, setEmail] = useState("");
   const [state, setState] = useState<State>("idle");
   const [message, setMessage] = useState("");
-  const click = useClickSound();
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    click();
     setState("sending");
+
+    const token = String(
+      new FormData(event.currentTarget).get("cf-turnstile-response") ?? "",
+    );
 
     try {
       const res = await fetch("/api/newsletter", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, token }),
       });
       const result = (await res.json()) as { ok: boolean; error?: string };
 
@@ -43,6 +49,13 @@ export default function NewsletterForm() {
 
   return (
     <form onSubmit={onSubmit} className="w-full max-w-sm">
+      {SITE_KEY ? (
+        <Script
+          src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+          strategy="lazyOnload"
+        />
+      ) : null}
+
       <label htmlFor="newsletter-email" className="sr-only">
         Your email address
       </label>
@@ -69,6 +82,10 @@ export default function NewsletterForm() {
           <Send size={16} aria-hidden="true" />
         </button>
       </div>
+
+      {SITE_KEY ? (
+        <div className="mt-2 cf-turnstile" data-sitekey={SITE_KEY} data-theme="auto" />
+      ) : null}
 
       {/* aria-live so the result is announced without moving focus. Always in
           the DOM: a region added at the same moment its text appears is often

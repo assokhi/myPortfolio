@@ -11,9 +11,5 @@ export const metadata: Metadata = {
 /** The unabridged version of the home page's Experience block. Same component,
  *  no `limit` — so adding a role is a data edit and this page needs no change. */
 export default function WorkPage() {
-  return (
-    <div className="pt-6 pb-10">
-      <Experience headingLevel="h1" id="work" />
-    </div>
-  );
+  return <Experience headingLevel="h1" id="work" />;
 }

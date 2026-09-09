@@ -3,27 +3,28 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { X } from "lucide-react";
-import { cn, cardSurface } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 export type RouteToastProps = {
   /** Route key for the dismissal record. sessionStorage, not localStorage: a
    *  dismissed toast stays gone while the visitor is still browsing, and comes
    *  back on a fresh visit. */
   storageKey: string;
-  /** Small all-caps line above the title, e.g. "NEW BLOG POST". */
+  /** Small line above the title, e.g. "New blog post". */
   badge: string;
   title: string;
   description: string;
   href: string;
   /** Link text, e.g. "Read article". */
   cta: string;
-  /** Optional image revealed when the card is expanded on hover or focus. */
-  cover?: string;
   /** How long to wait before showing. Long enough that it never competes with
    *  the page's own first paint. */
   delayMs?: number;
 };
 
+/** A flat notice, not a card: bottom-anchored, one soft shadow, no backdrop
+ *  blur and no hover-expanding cover image — the reference has no cards at
+ *  all, and a toast is the one floating element the site still needs. */
 export default function RouteToast({
   storageKey,
   badge,
@@ -31,7 +32,6 @@ export default function RouteToast({
   description,
   href,
   cta,
-  cover,
   delayMs = 2500,
 }: RouteToastProps) {
   // Three states rather than two: "not yet decided" is what renders on the
@@ -71,56 +71,22 @@ export default function RouteToast({
       role="status"
       aria-live="polite"
       className={cn(
-        "group fixed right-4 bottom-4 z-50 w-[min(22rem,calc(100vw-2rem))]",
-        cardSurface,
-        // bg-surface/60 from cardSurface is see-through; over page content a
-        // toast needs its own opaque ground or the text behind it shows.
-        // An unprompted card floating over the page needs to read as its own
-        // object at rest, not just on hover — cardSurface's default
-        // border-border is too close to bg-surface to do that alone.
-        "border-accent-2/40 bg-surface p-4 shadow-[0_16px_40px_-12px_var(--glass-drop)]",
+        "fixed inset-x-4 bottom-4 z-50 rounded-xl border border-border bg-surface p-4 shadow-lg",
+        "sm:inset-x-auto sm:right-6 sm:bottom-6 sm:w-full sm:max-w-sm",
         "motion-safe:animate-[toast-in_220ms_ease-out]",
       )}
     >
       <button
         type="button"
         onClick={dismiss}
-        aria-label="Dismiss this notification"
-        className="absolute top-2 right-2 rounded-full p-1 text-muted transition-colors hover:bg-bg hover:text-fg"
+        aria-label="Dismiss"
+        className="absolute top-1 right-1 flex size-11 items-center justify-center rounded-full text-muted transition-colors hover:bg-bg hover:text-fg"
       >
-        <X size={16} aria-hidden="true" />
+        <X size={18} aria-hidden="true" />
       </button>
 
-      <p className="flex items-center gap-2 text-[0.7rem] font-semibold tracking-widest text-muted uppercase">
-        <span
-          aria-hidden="true"
-          className="inline-block size-2 rounded-full bg-mint-ink motion-safe:animate-pulse"
-        />
-        {badge}
-      </p>
-
-      {/* Revealed on hover or keyboard focus anywhere in the card. grid-rows
-          0fr -> 1fr animates a height the browser can actually interpolate,
-          which `height: auto` is not. */}
-      {cover ? (
-        <div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 group-hover:grid-rows-[1fr] group-focus-within:grid-rows-[1fr]">
-          <div className="overflow-hidden">
-            {/* Images are unoptimized on Workers anyway (see next.config.ts),
-                so next/image would add a client component for no gain. */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={cover}
-              alt=""
-              width={320}
-              height={160}
-              loading="lazy"
-              className="mt-3 h-32 w-full rounded-lg object-cover"
-            />
-          </div>
-        </div>
-      ) : null}
-
-      <p className="mt-2 pr-5 font-semibold text-fg">{title}</p>
+      <p className="pr-8 text-sm font-medium tracking-wide text-muted">{badge}</p>
+      <p className="mt-1 pr-5 text-sm font-medium text-fg">{title}</p>
       <p className="mt-1 text-sm text-muted">{description}</p>
 
       <Link

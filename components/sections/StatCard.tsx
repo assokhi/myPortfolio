@@ -66,7 +66,7 @@ export function StatCard({
       <div className="flex items-start justify-between gap-3">
         <h4
           className={cn(
-            "inline-flex items-center rounded-full border px-3 py-1 font-mono text-[0.6875rem] font-medium uppercase tracking-[0.14em]",
+            "inline-flex items-center rounded-full border px-3 py-1 text-sm font-medium tracking-wide",
             t.pill,
           )}
         >

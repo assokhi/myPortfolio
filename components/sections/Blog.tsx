@@ -3,8 +3,7 @@ import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import type { PostMeta } from "@/content/types";
 import { formatDate } from "@/lib/dates";
-import { cn, cardSurface, sectionLabel } from "@/lib/utils";
-import BoldOnHover from "@/components/ui/bold-on-hover";
+import { cn, cardSurface, heading2, pageShell } from "@/lib/utils";
 
 /** date · N min read — the one metadata line every post surface uses, so the
  *  three views cannot drift apart. Tags moved to pills, so they are opt-out. */
@@ -16,7 +15,7 @@ export function PostMetaLine({
   withTags?: boolean;
 }) {
   return (
-    <p className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-xs text-muted">
+    <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm font-medium tracking-wide text-muted">
       <time dateTime={post.date}>{formatDate(post.date)}</time>
       <span aria-hidden="true" className="text-border">/</span>
       <span>{post.readingTime} min read</span>
@@ -40,7 +39,7 @@ export function TagPills({ tags }: { tags: string[] }) {
       {tags.map((t) => (
         <li
           key={t}
-          className="rounded-full bg-surface px-2.5 py-1 font-mono text-[0.65rem] uppercase tracking-[0.12em] text-muted"
+          className="rounded-full bg-surface px-2.5 py-1 text-sm font-medium tracking-wide text-muted"
         >
           {t}
         </li>
@@ -107,7 +106,7 @@ export function FeaturedPost({ post }: { post: PostMeta }) {
         />
         {/* Pill and badge sit on the photo, so both carry their own solid
             ground — dark ink on lime, 14:1, whatever the image underneath. */}
-        <span className="absolute left-5 top-5 inline-flex rounded-full bg-lime px-3 py-1 font-mono text-[0.65rem] uppercase tracking-[0.12em] text-on-bright">
+        <span className="absolute left-5 top-5 inline-flex rounded-full bg-lime px-3 py-1 text-sm font-medium tracking-wide text-on-bright">
           Featured
         </span>
         <ArrowBadge className="absolute bottom-5 right-5 bg-bg" />
@@ -115,16 +114,16 @@ export function FeaturedPost({ post }: { post: PostMeta }) {
 
       <div className="mt-5 space-y-3">
         <TagPills tags={post.tags} />
-        <h2 className="max-w-xl text-2xl font-semibold leading-tight text-fg sm:text-4xl">
+        <h2 className="max-w-xl text-xl font-bold tracking-[-0.01em] text-fg">
           <Link href={`/blog/${post.slug}`} className="underline-offset-4 hover:underline">
             {/* The whole card is the click target; the link keeps the
                 accessible name and the keyboard stop. */}
             <span className="absolute inset-0" aria-hidden="true" />
-            <BoldOnHover text={post.title} from={600} />
+            {post.title}
           </Link>
         </h2>
         <PostMetaLine post={post} withTags={false} />
-        <p className="max-w-2xl font-serif text-[1.05rem] leading-relaxed text-muted">
+        <p className="max-w-2xl text-[1.05rem] leading-relaxed text-muted">
           {post.summary}
         </p>
       </div>
@@ -146,7 +145,7 @@ export function PostList({ posts, startIndex = 1 }: { posts: PostMeta[]; startIn
             >
               <span
                 aria-hidden="true"
-                className="font-mono text-xs text-border transition-colors group-hover:text-accent-2"
+                className="text-sm font-medium tracking-wide text-border transition-colors group-hover:text-accent-2"
               >
                 {String(startIndex + i).padStart(2, "0")}
               </span>
@@ -159,12 +158,12 @@ export function PostList({ posts, startIndex = 1 }: { posts: PostMeta[]; startIn
 
               <div className="min-w-0">
                 <h3 className="text-lg font-semibold text-fg transition-transform duration-200 group-hover:translate-x-1">
-                  <BoldOnHover text={p.title} from={600} />
+                  {p.title}
                 </h3>
                 <div className="mt-1.5">
                   <PostMetaLine post={p} />
                 </div>
-                <p className="mt-2 font-serif text-sm leading-relaxed text-muted">
+                <p className="mt-2 text-sm leading-relaxed text-muted">
                   {p.summary}
                 </p>
               </div>
@@ -192,9 +191,9 @@ export function HomeBlogCards({ posts, id = "blog" }: { posts: PostMeta[]; id?: 
     <section
       id={id}
       aria-labelledby={`${id}-heading`}
-      className="reveal mx-auto w-full max-w-4xl px-5 py-14"
+      className={cn("reveal", pageShell)}
     >
-      <h2 id={`${id}-heading`} className={cn(sectionLabel, "mb-6 block")}>
+      <h2 id={`${id}-heading`} className={cn(heading2, "mb-8 block")}>
         Blog
       </h2>
 
@@ -209,7 +208,7 @@ export function HomeBlogCards({ posts, id = "blog" }: { posts: PostMeta[]; id?: 
             <h3 className="mt-3 text-sm font-semibold text-fg">
               <Link href={`/blog/${post.slug}`} className="underline-offset-4 hover:underline">
                 <span className="absolute inset-0" aria-hidden="true" />
-                <BoldOnHover text={post.title} from={600} />
+                {post.title}
               </Link>
             </h3>
             <div className="mt-1.5">

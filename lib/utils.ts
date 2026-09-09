@@ -8,30 +8,27 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-/** Every page and section heading. A connected script — legible at display
- *  size and not below it, so the size is part of the class, not a caller's
- *  choice. Card titles (h3/h4) stay on the sans stack. */
-export const displayHeading =
-  "font-script text-5xl leading-[1.1] text-fg sm:text-6xl";
+/** Outer container for every section, grid and nav — the marcushutchins.com
+ *  reference measured at 1140px, with the one section rhythm (60px mobile,
+ *  80px desktop) and gutter (20px) baked in so no page repeats the numbers. */
+export const pageShell = "mx-auto w-full max-w-[71.25rem] px-5 py-15 sm:py-20";
+
+/** Cap for any block of running text — ~68ch at 20px, the width past which a
+ *  line gets hard to track back to its start. */
+export const proseMeasure = "max-w-[38rem]";
+
+/** Page h1. 32px on mobile (a deliberate size, not a shrunk 55px) up to 55px
+ *  on desktop — both measured off the reference. */
+export const heading1 =
+  "text-[2rem] font-black leading-[1.3] tracking-[-0.02em] text-fg sm:text-[3.4375rem]";
+
+/** Section h2 — "Experience", "Projects", "Tech stack". Flat at 24px across
+ *  every breakpoint: holding the size is what stops the mobile layout
+ *  reading as a squashed desktop. */
+export const heading2 =
+  "text-2xl font-bold leading-[1.3] tracking-[-0.02em] text-fg";
 
 /** One card surface for the whole site — experience tiles, live-stat cards and
- *  the contact links. Kept here so a change to the card look is one edit, not
- *  four copies of the same class string drifting apart.
- *
- *  The shadow is the same glass recipe as the nav pill (site-nav.tsx): an
- *  inset top highlight plus a soft outer drop, both driven by the
- *  --glass-highlight/--glass-drop tokens so day/night each get their own
- *  values. Without it a card is just a flat rectangle a shade lighter than
- *  the page — technically a boundary, not a surface with any lift to it. */
-export const cardSurface =
-  "rounded-2xl border border-border bg-surface/60 shadow-[inset_0_1px_0_0_var(--glass-highlight),0_16px_40px_-12px_var(--glass-drop)] backdrop-blur-sm transition-colors duration-200 hover:border-accent-2/50";
-
-/** Every section heading — "Experience", "Projects", "Tech stack". Real
- *  heading weight (not a tiny tracked-caps label standing in for one): the
- *  hero h1 is the only thing bigger, so this is the next rung down a type
- *  scale that used to jump straight from a 4xl/6xl h1 to 12px uppercase text
- *  with nothing between. The script face stays reserved for pure display
- *  moments (the footer signature) rather than every heading — eight sections
- *  in Great Vibes would be a novelty, not a hierarchy. */
-export const sectionLabel =
-  "text-2xl font-semibold tracking-tight text-fg sm:text-3xl";
+ *  the contact links. The reference has no cards, no shadows, no rounded
+ *  surfaces: the divider *is* the boundary. */
+export const cardSurface = "border-t border-border pt-6 transition-colors";

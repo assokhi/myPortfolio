@@ -4,7 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { profile } from "@/content/profile";
 import { getPosts } from "@/lib/blog";
 import BlogFilter from "@/components/sections/BlogFilter";
-import { cn, displayHeading } from "@/lib/utils";
+import { cn, heading1, pageShell, proseMeasure } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -16,7 +16,7 @@ export default async function BlogIndex() {
   const posts = await getPosts();
 
   return (
-    <div className="mx-auto max-w-3xl px-5 py-12 sm:py-16">
+    <div className={pageShell}>
       <Link
         href="/"
         className="inline-flex items-center gap-2 text-sm text-muted transition-colors hover:text-accent"
@@ -26,8 +26,8 @@ export default async function BlogIndex() {
       </Link>
 
       <header className="mt-8 mb-8">
-        <h1 className={displayHeading}>Writing &amp; thoughts</h1>
-        <p className="mt-3 max-w-xl font-serif text-[1.05rem] leading-relaxed text-muted">
+        <h1 className={heading1}>Writing &amp; thoughts</h1>
+        <p className={cn("mt-3 text-[1.05rem] leading-relaxed text-muted", proseMeasure)}>
           Things I worked out the hard way and wrote down — notes on shipping,
           performance and the parts nobody documents.
         </p>

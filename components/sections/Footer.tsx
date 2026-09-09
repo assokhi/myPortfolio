@@ -2,6 +2,7 @@ import { profile, mailtoHref } from "@/content/profile";
 import SocialLinks from "@/components/ui/SocialLinks";
 import NewsletterForm from "@/components/sections/NewsletterForm";
 import VisitorCounter from "@/components/sections/VisitorCounter";
+import { pageShell } from "@/lib/utils";
 
 /** Peerlist (or any embeddable social-proof profile). Configured entirely by
  *  environment variable so the block simply does not exist when there is no
@@ -21,16 +22,14 @@ const initials = profile.name
 export default function Footer() {
   return (
     <footer className="border-t border-border">
-      <div className="mx-auto flex max-w-3xl flex-col items-center px-5 py-16 text-center">
+      <div className={`flex flex-col items-center text-center ${pageShell}`}>
         {/* Decorative divider. aria-hidden because "middle dot middle dot
             middle dot" is not information. */}
         <p aria-hidden="true" className="text-2xl tracking-[0.5em] text-muted">
           &middot;&middot;&middot;
         </p>
 
-        {/* The signature. A connected script is unreadable below about 2rem,
-            which is why the size is fixed here rather than left to a caller. */}
-        <p className="mt-6 font-script text-5xl leading-none text-fg">
+        <p className="mt-6 text-2xl font-black tracking-[-0.02em] text-fg">
           {profile.name}
         </p>
 

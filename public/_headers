@@ -33,8 +33,31 @@
 # Unlisted pages. The meta robots tag in each page covers crawlers that render
 # HTML; this header covers the ones that only read headers, and any direct hit
 # on the .txt payload Next writes beside each route.
-/vault
-  X-Robots-Tag: noindex, nofollow
-
 /views
   X-Robots-Tag: noindex, nofollow
+
+# Global security headers. CSP ships Report-Only for one deploy: check the
+# console on every route for violations, then rename this to
+# Content-Security-Policy once it is confirmed clean.
+#
+# script-src needs 'unsafe-inline', and NOT alongside a hash: verified against
+# the actual `out/` build that this repo's App Router + "use client" tree ships
+# a `self.__next_f.push(...)` inline script per RSC chunk on every route (the
+# hydration payload), not just the two hand-written scripts in app/layout.tsx
+# (the anti-FOUC theme script and the JSON-LD block). Those two are static and
+# hashable; the flight-data ones are per-route and change with every content
+# or component edit, so a hash allowlist is not maintainable by hand and would
+# break hydration site-wide the moment this is promoted out of Report-Only.
+# A CSP3 browser also drops 'unsafe-inline' entirely the moment ANY hash or
+# nonce source is present in the same directive, which would silently
+# reintroduce that exact breakage — so this directive carries no hashes, only
+# 'unsafe-inline', same posture as style-src below and for the same underlying
+# reason (Tailwind's inline styles / Next's inline hydration data — neither
+# has a nonce path in a purely static export with no per-request templating).
+/*
+  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://github.githubassets.com; font-src 'self'; frame-src 'self' https://challenges.cloudflare.com https://peerlist.io; connect-src 'self' https://challenges.cloudflare.com; form-action 'self'; base-uri 'self'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  Permissions-Policy: camera=(), microphone=(), geolocation=()

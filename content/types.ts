@@ -81,16 +81,8 @@ export type Experience = {
   imageFit?: "cover" | "contain";
 };
 
-export type Stack = {
-  name: string;
-  /** What you actually build with this combination. */
-  description: string;
-  tech: string[];
-};
-
 export type Skills = {
-  stacks: Stack[];
-  /** Broader list. Group name -> technologies. */
+  /** Group name -> technologies. */
   technologies: Record<string, string[]>;
 };
 

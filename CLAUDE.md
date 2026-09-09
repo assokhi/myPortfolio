@@ -4,10 +4,11 @@ Personal portfolio site. **Purpose: job hunting** — a recruiter skims this in
 under a minute. Every call ranks: clear role → projects with outcomes → fast
 load → easy contact. Animation supports scanning; it never delays it.
 
-Status: rebuilt 2026-09-08 against the build spec in
-`~/.claude/plans/frolicking-leaping-key.md`. `prd/` describes the FIRST build
-(routes `/about`, `/experience`, `/skills`; lamp and tracing-beam design) and is
-superseded — read it for the reasoning about audience and performance budgets,
+Status: reskinned 2026-09-09 to the marcushutchins.com direction, against the
+build spec in `~/.claude/plans/this-is-not-looking-mellow-scone.md` — token
+reference persisted at `.claude/rules/design-system.md`. `prd/` describes the
+FIRST build (routes `/about`, `/experience`, `/skills`; lamp and tracing-beam
+design) and is superseded — read it for the reasoning about audience and performance budgets,
 not for the current structure.
 
 Content files still carry example data marked `TODO(you)`, and some of it is

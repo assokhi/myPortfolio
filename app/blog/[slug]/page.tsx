@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getPost, getPosts } from "@/lib/blog";
 import { profile } from "@/content/profile";
+import { cn, heading1, pageShell, proseMeasure } from "@/lib/utils";
 import { PostMetaLine } from "@/components/sections/Blog";
 import ViewBeacon from "@/components/sections/ViewBeacon";
 
@@ -49,7 +50,7 @@ export default async function PostPage({ params }: PageProps<"/blog/[slug]">) {
   const beacon = <ViewBeacon slug={slug} />;
 
   return (
-    <div className="mx-auto max-w-3xl px-5 py-12 sm:py-16">
+    <div className={pageShell}>
       {beacon}
       <Link
         href="/blog"
@@ -61,10 +62,10 @@ export default async function PostPage({ params }: PageProps<"/blog/[slug]">) {
 
       <article className="mt-8">
         <header className="border-b border-border pb-8">
-          <h1 className="text-3xl font-semibold leading-tight text-fg sm:text-4xl">
+          <h1 className={heading1}>
             {post.meta.title}
           </h1>
-          <p className="mt-3 max-w-2xl font-serif text-lg leading-relaxed text-muted">
+          <p className={cn("mt-3 text-lg leading-relaxed text-muted", proseMeasure)}>
             {post.meta.summary}
           </p>
           <div className="mt-5">
@@ -73,7 +74,7 @@ export default async function PostPage({ params }: PageProps<"/blog/[slug]">) {
         </header>
 
         {/* Typography for Markdown output, without pulling in a plugin. */}
-        <div className="mt-8 space-y-5 font-serif text-[1.05rem] leading-relaxed text-muted [&_a]:text-accent [&_a]:underline [&_a]:underline-offset-4 [&_blockquote]:border-l-2 [&_blockquote]:border-accent-2 [&_blockquote]:pl-5 [&_blockquote]:italic [&_blockquote]:text-fg [&_code]:rounded [&_code]:bg-surface [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-sm [&_h2]:pt-4 [&_h2]:font-sans [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:text-fg [&_h3]:pt-2 [&_h3]:font-sans [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-fg [&_li]:ml-5 [&_ol]:list-decimal [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:border [&_pre]:border-border [&_pre]:bg-surface [&_pre]:p-4 [&_pre_code]:bg-transparent [&_pre_code]:p-0 [&_strong]:text-fg [&_ul]:list-disc">
+        <div className={cn("mt-8 space-y-5 text-[1.05rem] leading-relaxed text-muted [&_a]:text-accent [&_a]:underline [&_a]:underline-offset-4 [&_blockquote]:border-l-2 [&_blockquote]:border-accent-2 [&_blockquote]:pl-5 [&_blockquote]:italic [&_blockquote]:text-fg [&_code]:rounded [&_code]:bg-surface [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-sm [&_h2]:pt-4 [&_h2]:text-xl [&_h2]:font-bold [&_h2]:text-fg [&_h3]:pt-2 [&_h3]:text-lg [&_h3]:font-bold [&_h3]:text-fg [&_li]:ml-5 [&_ol]:list-decimal [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:border [&_pre]:border-border [&_pre]:bg-surface [&_pre]:p-4 [&_pre_code]:bg-transparent [&_pre_code]:p-0 [&_strong]:text-fg [&_ul]:list-disc", proseMeasure)}>
           <MDXRemote source={post.body} />
         </div>
       </article>
@@ -88,7 +89,7 @@ export default async function PostPage({ params }: PageProps<"/blog/[slug]">) {
               href={`/blog/${newer.slug}`}
               className="group rounded-xl border border-border bg-surface/60 p-4 transition-colors hover:border-accent-2/50"
             >
-              <span className="font-mono text-xs text-muted">← Newer</span>
+              <span className="text-sm font-medium tracking-wide text-muted">← Newer</span>
               <span className="mt-1 block font-medium text-fg group-hover:text-accent">
                 {newer.title}
               </span>
@@ -101,7 +102,7 @@ export default async function PostPage({ params }: PageProps<"/blog/[slug]">) {
               href={`/blog/${older.slug}`}
               className="group rounded-xl border border-border bg-surface/60 p-4 transition-colors hover:border-accent-2/50 sm:text-right"
             >
-              <span className="font-mono text-xs text-muted">Older →</span>
+              <span className="text-sm font-medium tracking-wide text-muted">Older →</span>
               <span className="mt-1 block font-medium text-fg group-hover:text-accent">
                 {older.title}
               </span>

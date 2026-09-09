@@ -1,13 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { displayHeading } from "@/lib/utils";
+import { heading1, pageShell } from "@/lib/utils";
 
 // Never a stack trace in front of a recruiter.
 export default function Error({ reset }: { error: Error; reset: () => void }) {
   return (
-    <div className="mx-auto flex max-w-3xl flex-col items-start px-5 py-24">
-      <h1 className={displayHeading}>
+    <div className={`flex flex-col items-start ${pageShell}`}>
+      <h1 className={heading1}>
         Something went wrong
       </h1>
       <p className="mt-2 text-muted">
