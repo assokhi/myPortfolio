@@ -9,6 +9,7 @@ export const profile: Profile = {
     "I build fast, accessible web products end to end — TypeScript on both sides, and a bias for shipping.",
   intro:
     "Hey, I'm Arvinder. I build full-stack web apps that feel snappy and work reliably. Big fan of clean TypeScript, distributed systems, and shipping practical side projects.",
+  avatar: "/assets/photo.jpg",
   location: "India",
   email: "singhsokhiarvinder@gmail.com",
   emailSubject: "Opportunity — via your portfolio",

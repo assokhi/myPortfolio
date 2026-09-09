@@ -55,7 +55,7 @@ export default function Footer() {
                 width={40}
                 height={40}
                 loading="lazy"
-                className="size-10 rounded-full object-cover"
+                className="avatar-photo size-10 rounded-full object-cover"
               />
             ) : (
               <span

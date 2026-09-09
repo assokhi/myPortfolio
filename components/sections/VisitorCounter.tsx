@@ -57,8 +57,8 @@ export default function VisitorCounter() {
         {/* Two stacked dots: a solid core and a ping ring behind it. The ring
             is motion-safe only — a permanent pulse is exactly the kind of
             idle animation reduced-motion exists to stop. */}
-        <span className="absolute inline-flex size-full rounded-full bg-mint opacity-75 motion-safe:animate-ping" />
-        <span className="relative inline-flex size-2 rounded-full bg-mint" />
+        <span className="absolute inline-flex size-full rounded-full bg-mint-ink opacity-75 motion-safe:animate-ping" />
+        <span className="relative inline-flex size-2 rounded-full bg-mint-ink" />
       </span>
       <span>
         You are the <span className="font-medium text-fg">{ordinal(count)}</span>{" "}

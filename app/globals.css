@@ -23,10 +23,19 @@
   --color-accent: #ffffff;    /* 20.4:1 */
   --color-accent-2: #a78bfa;  /*  6.6:1 */
   /* Bento highlight fills. These are card BACKGROUNDS, never text colours —
-     type on them is --color-bg, which is 15:1 on the lime and 12:1 on the
-     mint. Two pops of colour in a dark grid; a third would be a rainbow. */
-  --color-lime: #d8f14b;
-  --color-mint: #3fe0a3;
+     type on them is --color-bg, which clears 11:1 on both. Muted sand and
+     sage rather than the old neon lime/mint: same job (two calm pops of
+     colour in the grid), lower saturation so the page reads composed instead
+     of loud. */
+  --color-lime: #ddc9a3;
+  --color-mint: #a3c9b5;
+  /* Same two hues, usable as TEXT (see StatCard's "dark" pill). The fills
+     above are locked light so dark ink sits on them in both themes; text needs
+     the opposite in daylight, so these are the one pair that legitimately
+     flips — see the light override below. Night keeps them equal to the fill,
+     since a light hue already clears 4.5:1 on a black page. */
+  --color-lime-ink: #ddc9a3;
+  --color-mint-ink: #a3c9b5;
   /* Type that sits ON lime or mint. Fixed in both themes: those two fills do
      not flip, so their ink must not either — `text-bg` here would go white on
      lime the moment the day theme loaded. */
@@ -44,9 +53,10 @@
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
-  /* Body copy is set in Times New Roman. It is a system font on every target
-     platform, so this costs no webfont request. */
-  --font-serif: "Times New Roman", Times, Georgia, serif;
+  /* Body copy face. Times New Roman read as an unstyled browser default, not
+     a designed choice — Lora is a calmer, warmer text serif at the same
+     next/font cost as the other two faces below. */
+  --font-serif: var(--font-lora), Georgia, "Times New Roman", serif;
   /* Display script. Great Vibes is the OFL stand-in for Geraldine, which is
      licensed for personal use only and is not on Google Fonts — see the note
      in components/sections/About.tsx before swapping it. Headline sizes only:
@@ -83,6 +93,10 @@ html {
   --sheet-shadow: rgba(0, 0, 0, 0.9);
   --glass-highlight: rgba(255, 255, 255, 0.08);
   --glass-drop: rgba(0, 0, 0, 0.6);
+  /* The portrait's own background is a flat light grey, which reads as washed
+     out against a near-black page — a touch more contrast and saturation
+     keeps it from looking flat next to the bright type around it. */
+  --avatar-filter: contrast(1.1) saturate(1.12) brightness(1.04);
 }
 
 :root[data-theme="light"] {
@@ -97,9 +111,18 @@ html {
   --color-accent-2: #6d28d9;  /*  6.9:1 */
   --color-ink: #000000;
   --color-beam: #8b5cf6;
+  /* The fills themselves stay light for the dark ink sitting on them; only the
+     TEXT variant darkens, so text-lime-ink still clears 4.5:1 on a white page.
+     Same hue family, deep shade — 5.4:1 (sand) and 6.3:1 (sage) on --surface. */
+  --color-lime-ink: #7a5f1c;
+  --color-mint-ink: #356050;
   --sheet-shadow: rgba(20, 20, 35, 0.12);
   --glass-highlight: rgba(255, 255, 255, 0.75);
   --glass-drop: rgba(20, 20, 35, 0.12);
+  /* Daylight already separates the portrait from a white page; night's extra
+     punch would just blow out the highlights here, so this is a lighter
+     touch — contrast only, no added saturation or brightness. */
+  --avatar-filter: contrast(1.05);
 }
 
 body {
@@ -107,6 +130,17 @@ body {
   color: var(--color-fg);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  /* Momentum scrolling on older iOS Safari; modern engines already do this by
+     default, but it's a free one-liner and never a regression. */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* --- Avatar photo ---------------------------------------------------------
+   One filter recipe per theme (--avatar-filter, set above), so the same JPG
+   in Hero and Footer gets the treatment that actually suits the page it sits
+   on instead of one compromise value for both. */
+.avatar-photo {
+  filter: var(--avatar-filter);
 }
 
 /* --- Grid paper ----------------------------------------------------------

@@ -94,7 +94,7 @@ export default function RouteToast({
       <p className="flex items-center gap-2 text-[0.7rem] font-semibold tracking-widest text-muted uppercase">
         <span
           aria-hidden="true"
-          className="inline-block size-2 rounded-full bg-mint motion-safe:animate-pulse"
+          className="inline-block size-2 rounded-full bg-mint-ink motion-safe:animate-pulse"
         />
         {badge}
       </p>

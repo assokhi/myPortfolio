@@ -116,7 +116,9 @@ export function SiteNav() {
               ],
           // On a phone the bar is only ever the two controls, so the pill
           // treatment would be a bubble around a hamburger. Stay flat and let
-          // the controls sit at the right edge.
+          // the controls sit at the right edge — the glass strip itself is on
+          // Header's outer element, which is full-bleed; this row just has to
+          // stay transparent so that shows through instead of boxing it in.
           "max-sm:w-full max-sm:max-w-none max-sm:justify-end max-sm:rounded-none max-sm:border-none max-sm:bg-transparent max-sm:p-0 max-sm:shadow-none max-sm:backdrop-blur-none",
         )}
       >

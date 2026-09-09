@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Great_Vibes } from "next/font/google";
+import { Geist, Geist_Mono, Great_Vibes, Lora } from "next/font/google";
 import { profile } from "@/content/profile";
 import Header from "@/components/sections/Header";
 import Footer from "@/components/sections/Footer";
@@ -7,6 +7,9 @@ import "./globals.css";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+// Body-copy serif — see --font-serif in globals.css. display: "swap" so text
+// paints in the fallback immediately rather than waiting on the request.
+const lora = Lora({ variable: "--font-lora", subsets: ["latin"], display: "swap" });
 
 // The display script: every section and page heading (see `displayHeading` in
 // lib/utils.ts) plus the signature under the About blurb. preload: false on
@@ -55,7 +58,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} ${greatVibes.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${greatVibes.variable} ${lora.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-bg text-fg">
         {/* First thing in the body so the attribute is set before anything

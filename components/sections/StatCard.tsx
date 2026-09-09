@@ -25,7 +25,7 @@ const TONES = {
   },
   dark: {
     card: cn(cardSurface, "rounded-3xl"),
-    pill: "border-lime/40 bg-lime/10 text-lime",
+    pill: "border-lime/40 bg-lime/10 text-lime-ink",
     link: "border-bg bg-bg text-fg hover:border-fg/40",
     chip: "bg-fg/10 text-fg",
   },
