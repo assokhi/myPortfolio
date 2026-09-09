@@ -1,5 +1,4 @@
 import { cn, heading2, pageShell } from "@/lib/utils";
-import ContributionCalendar from "@/components/sections/ContributionCalendar";
 import {
   GithubCard,
   LeetcodeCard,
@@ -10,9 +9,13 @@ import {
  *
  *  The three cards are baked at build time (see lib/stats.ts and the
  *  force-static routes under app/api), so this whole section costs the visitor
- *  zero runtime requests. The skyline below them is the one exception: it is
- *  lazy, below the fold, and served from GitHub's own CDN, so it refreshes
- *  daily without a redeploy.
+ *  zero runtime requests, and refreshes on redeploy.
+ *
+ *  A GitHub contribution heatmap used to sit under these. Removed: it was the
+ *  one element on the page that had to fight its own container — three
+ *  !important rules in globals.css to stop the library forcing a horizontal
+ *  scrollbar — and it repeated the contribution total the GitHub card already
+ *  states.
  *
  *  Each card renders its own fallback when the API is unreachable — nothing
  *  here can throw a section off the page. */
@@ -36,8 +39,6 @@ export default async function GithubActivity({ id = "activity" }: { id?: string 
         <LeetcodeCard tone="dark" />
         <CodeforcesCard tone="dark" />
       </div>
-
-      <ContributionCalendar />
     </section>
   );
 }

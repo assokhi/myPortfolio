@@ -71,7 +71,7 @@ Local development (`.env`, gitignored — `cp .env.example .env`):
 
 | Variable | Used by | Needed for |
 |---|---|---|
-| `GITHUB_TOKEN` | build | Contribution calendar; without it GitHub still answers, but unauthenticated (60 req/hour) and with no calendar |
+| `GITHUB_TOKEN` | build | Contributions-in-the-last-year total (GraphQL-only, token-only); without it GitHub still answers, but unauthenticated (60 req/hour) and with no total |
 | `UPSTASH_REDIS_REST_URL` | `worker.ts` | Visitor counter under `npm run preview` (until KV is bound) |
 | `UPSTASH_REDIS_REST_TOKEN` | `worker.ts` | Same |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | build | Renders the Turnstile widget. Absent = no widget, and the Worker skips the check to match |

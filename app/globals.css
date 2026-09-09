@@ -257,40 +257,6 @@ body {
   }
 }
 
-/* --- Accordion -----------------------------------------------------------
-   Animating a <details> open used to need JavaScript. `::details-content`
-   plus `interpolate-size` lets CSS do it: the content box animates from zero
-   to its natural height, and `transition-behavior: allow-discrete` is what
-   keeps `content-visibility` from snapping the element into view before the
-   height has moved.
-
-   Per MDN this is Chrome 131+ and Safari 18.4+; Firefox opens instantly. That
-   is the intended fallback, not a bug — the row still opens everywhere, and
-   nothing is hidden from anyone. Same posture as .reveal above. */
-@supports selector(::details-content) {
-  .accordion {
-    interpolate-size: allow-keywords;
-  }
-
-  .accordion::details-content {
-    block-size: 0;
-    overflow: hidden;
-    transition:
-      block-size 320ms ease,
-      content-visibility 320ms allow-discrete;
-  }
-
-  .accordion[open]::details-content {
-    block-size: auto;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .accordion::details-content {
-    transition: none !important;
-  }
-}
-
 /* The mobile menu is a modal <dialog>, which blocks interaction with the page
    but does not stop it scrolling underneath. One rule does, with no JavaScript
    and nothing to clean up on unmount — the selector stops matching the moment

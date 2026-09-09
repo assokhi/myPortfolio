@@ -27,13 +27,6 @@ export const githubGraphqlRaw = z.object({
       contributionsCollection: z.object({
         contributionCalendar: z.object({
           totalContributions: z.number(),
-          weeks: z.array(
-            z.object({
-              contributionDays: z.array(
-                z.object({ date: z.string(), contributionCount: z.number() }),
-              ),
-            }),
-          ),
         }),
       }),
     }),
@@ -56,11 +49,6 @@ export const githubStats = z.object({
     }),
   ),
   achievements: z.array(z.object({ name: z.string(), image: z.string() })),
-  /** One entry per week, each a run of days. Empty without a GITHUB_TOKEN —
-   *  the calendar is GraphQL-only and GraphQL is token-only. */
-  calendar: z.array(
-    z.array(z.object({ date: z.string(), count: z.number() })),
-  ),
 });
 export type GithubStats = z.infer<typeof githubStats>;
 

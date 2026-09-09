@@ -1,14 +1,19 @@
 import { ExternalLink } from "lucide-react";
 import { experience } from "@/content/experience";
 import { formatRange } from "@/lib/dates";
-import { cn, heading2, pageShell } from "@/lib/utils";
-import Accordion from "@/components/ui/accordion";
+import { cn, cardSurface, heading2, pageShell } from "@/lib/utils";
 import { TechPill } from "@/components/ui/tech-icon";
 import CardLogo from "@/components/ui/card-logo";
 
-/** The work history, as a vertical timeline of expandable rows.
+/** The work history, as a vertical timeline of flat rows.
  *
- *  `limit` is what makes this one component serve both the home page (one row,
+ *  Nothing collapses. The highlights ARE the reason a recruiter opened this
+ *  page, and a chevron is a click they will not spend — so they are in the
+ *  initial HTML, where an ATS scraper reads them too. Dropping the accordion
+ *  also took this whole subtree off the client: there is no `"use client"`
+ *  anywhere under it now.
+ *
+ *  `limit` is what makes this one component serve both the home page (two rows,
  *  then a link to the full list) and /work (everything). A second component
  *  that differed only in `.slice()` would be two files drifting apart. */
 export default function Experience({
@@ -33,65 +38,52 @@ export default function Experience({
         Experience
       </Heading>
 
-      <div className="space-y-3">
+      {/* No gap between rows: each carries pt-6 above its own hairline and
+          pb-6 below its content, so the rule lands centred in 48px of air
+          instead of a rule-plus-gap that reads as uneven. */}
+      <div>
         {roles.map((role) => (
-          <Accordion
+          // Each row fades and rises into place on its own scroll timeline
+          // (.reveal, globals.css) — a staggered entrance with no JS and no
+          // per-row delay to hand-tune. No horizontal padding: cardSurface is
+          // a hairline top rule, not a box, so the content sits on the
+          // section's own left edge in line with the h2 above it.
+          <div
             key={`${role.company}-${role.role}`}
-            // Each card fades and rises into place on its own scroll timeline
-            // (.reveal, globals.css) — a staggered entrance with no JS and no
-            // per-row delay to hand-tune.
-            className="reveal"
-            // The most recent role is open on arrival. A recruiter who reads
-            // nothing else reads this one, and making them click for it is a
-            // click they will not spend.
-            defaultOpen={role === roles[0]}
-            summary={
-              <div className="flex items-center gap-4">
-                <CardLogo
-                  image={role.image}
-                  imageLight={role.imageLight}
-                  brand={role.logo ?? role.company}
-                  fit={role.imageFit}
-                  shape="circle"
-                  className="size-[42px]"
-                />
-
-                <div className="min-w-0">
-                  <p className="flex flex-wrap items-center gap-x-2 font-semibold text-fg">
-                    {role.role}
-                    {role.href ? (
-                      // Inside <summary>, so it must not be focusable: a link
-                      // in a summary is a keyboard trap and swallows the
-                      // toggle's own Enter key. The company row on the
-                      // expanded panel carries the real link instead.
-                      <ExternalLink
-                        size={14}
-                        aria-hidden="true"
-                        className="text-muted"
-                      />
-                    ) : null}
-                  </p>
-                  <p className="truncate text-sm text-muted">
-                    {role.company}
-                    {role.location ? ` · ${role.location}` : ""}
-                  </p>
-                </div>
-
-                <time className="ml-auto shrink-0 text-sm text-muted">
-                  {formatRange(role.start, role.end)}
-                </time>
-              </div>
-            }
+            className={cn(cardSurface, "reveal pb-6")}
           >
+            <div className="flex items-center gap-4">
+              <CardLogo
+                image={role.image}
+                imageLight={role.imageLight}
+                brand={role.logo ?? role.company}
+                fit={role.imageFit}
+                shape="circle"
+                className="size-[42px]"
+              />
+
+              <div className="min-w-0">
+                <p className="font-semibold text-fg">{role.role}</p>
+                <p className="truncate text-sm text-muted">
+                  {role.company}
+                  {role.location ? ` · ${role.location}` : ""}
+                </p>
+              </div>
+
+              <time className="ml-auto shrink-0 text-sm text-muted">
+                {formatRange(role.start, role.end)}
+              </time>
+            </div>
+
             {role.stack.length ? (
-              <ul className="mb-5 flex flex-wrap gap-2">
+              <ul className="mt-5 flex flex-wrap gap-2">
                 {role.stack.map((tech) => (
                   <TechPill key={tech} name={tech} />
                 ))}
               </ul>
             ) : null}
 
-            <ul className="space-y-3">
+            <ul className="mt-5 space-y-3">
               {role.highlights.map((point) => (
                 <li key={point} className="relative pl-6 text-sm leading-relaxed text-muted">
                   {/* The timeline: a dot per bullet, and a rule running down
@@ -121,7 +113,7 @@ export default function Experience({
                 <span className="sr-only">(opens in a new tab)</span>
               </a>
             ) : null}
-          </Accordion>
+          </div>
         ))}
       </div>
     </section>

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, pageWidth } from "@/lib/utils";
 import ThemeToggle from "@/components/ui/theme-toggle";
 
 /** The nav is text, not icons. Two reasons, both structural rather than
@@ -70,8 +70,11 @@ export function SiteNav() {
   return (
     <>
       {/* Flat text menu, full width, no border, no fill — the reference has
-          no nav pill, no scroll-collapse and no glass. */}
-      <nav aria-label="Main" className="mx-auto flex w-full max-w-[71.25rem] items-center gap-1 px-5 py-3">
+          no nav pill, no scroll-collapse and no glass. `pageWidth` rather than
+          the numbers again: the nav shares the content's left edge, and a
+          duplicated max-width is how the two drift apart. It cannot use
+          `pageShell`, which carries a section's vertical rhythm. */}
+      <nav aria-label="Main" className={cn(pageWidth, "flex items-center gap-1 py-3")}>
         {/* Six text links, hidden on phones where they do not fit on one line.
             They are still in the DOM inside the dialog below, so a crawler
             reads the same six links at every viewport. */}
@@ -96,7 +99,10 @@ export function SiteNav() {
           })}
         </div>
 
-        <ThemeToggle className="sm:ml-auto" />
+        {/* ml-auto at every width, not just sm+. On a phone the six links are
+            hidden, so a toggle without it left the toggle and the menu button
+            clustered against the left edge with the rest of the bar empty. */}
+        <ThemeToggle className="ml-auto" />
 
         <button
           type="button"

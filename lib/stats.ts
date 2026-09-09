@@ -28,26 +28,23 @@ const HOUR = 3600;
 
 /* ---------- GitHub ---------- */
 
+/** Only `totalContributions` is asked for. The per-day `weeks` this used to
+ *  fetch existed for a heatmap that no longer ships, and it was ~365 objects
+ *  baked into the static /api/github payload on every build. */
 const CONTRIBUTIONS_QUERY = `
   query($login: String!) {
     user(login: $login) {
       contributionsCollection {
         contributionCalendar {
           totalContributions
-          weeks { contributionDays { date contributionCount } }
         }
       }
     }
   }`;
 
-type Calendar = {
-  total: number;
-  weeks: { date: string; count: number }[][];
-};
-
-/** The contribution calendar is only reachable through GraphQL, and only with a
- *  token. No token means no calendar — not a failed section. */
-async function contributions(login: string): Promise<Calendar | null> {
+/** The contribution total is only reachable through GraphQL, and only with a
+ *  token. No token means no total — not a failed section. */
+async function contributions(login: string): Promise<number | null> {
   const token = process.env.GITHUB_TOKEN;
   if (!token) return null;
   try {
@@ -60,18 +57,8 @@ async function contributions(login: string): Promise<Calendar | null> {
       body: JSON.stringify({ query: CONTRIBUTIONS_QUERY, variables: { login } }),
       revalidate: HOUR,
     });
-    const cal =
-      githubGraphqlRaw.parse(raw).data.user.contributionsCollection
-        .contributionCalendar;
-    return {
-      total: cal.totalContributions,
-      weeks: cal.weeks.map((w) =>
-        w.contributionDays.map((d) => ({
-          date: d.date,
-          count: d.contributionCount,
-        })),
-      ),
-    };
+    return githubGraphqlRaw.parse(raw).data.user.contributionsCollection
+      .contributionCalendar.totalContributions;
   } catch {
     return null;
   }
@@ -118,7 +105,7 @@ export async function getGithub(): Promise<ApiResult<GithubStats>> {
   };
 
   try {
-    const [userRaw, reposRaw, calendar, badges] = await Promise.all([
+    const [userRaw, reposRaw, contributionTotal, badges] = await Promise.all([
       fetchJson(`https://api.github.com/users/${login}`, {
         headers,
         revalidate: HOUR,
@@ -140,8 +127,7 @@ export async function getGithub(): Promise<ApiResult<GithubStats>> {
         followers: user.followers,
         publicRepos: user.public_repos,
         totalStars: owned.reduce((n, r) => n + r.stargazers_count, 0),
-        contributionsLastYear: calendar?.total ?? null,
-        calendar: calendar?.weeks ?? [],
+        contributionsLastYear: contributionTotal,
         profileUrl: user.html_url,
         achievements: badges,
         topRepos: owned

@@ -64,14 +64,17 @@ export function StatCard({
       )}
     >
       <div className="flex items-start justify-between gap-3">
-        <h4
+        {/* h3, not h4: the only heading above these is the section's own h2,
+            so h4 skipped a level — a screen reader announces that as a missing
+            heading, and Lighthouse flags it. */}
+        <h3
           className={cn(
             "inline-flex items-center rounded-full border px-3 py-1 text-sm font-medium tracking-wide",
             t.pill,
           )}
         >
           {title}
-        </h4>
+        </h3>
         {href ? (
           <a
             href={href}
@@ -94,8 +97,9 @@ export function StatCard({
           concludes you cannot ship reliable software. Same capsule as the
           syncing chip — one shape for every state of the card. */}
       {/* Footer line: anything the card wants on the left, the status chip on
-          the right, centred against each other. */}
-      <div className="-mt-[10px] flex items-center justify-between gap-3 pt-3">
+          the right, bottom-aligned against each other so a tall footerLeft (the
+          GitHub card's badge row) does not lift its chip above the other cards. */}
+      <div className="-mt-[10px] flex items-end justify-between gap-3 pt-3">
         {footerLeft ?? <span />}
         <StatusChip stale={stale} className={t.chip} />
       </div>

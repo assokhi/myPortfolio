@@ -8,10 +8,15 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-/** Outer container for every section, grid and nav — the marcushutchins.com
- *  reference measured at 1140px, with the one section rhythm (60px mobile,
- *  80px desktop) and gutter (20px) baked in so no page repeats the numbers. */
-export const pageShell = "mx-auto w-full max-w-[71.25rem] px-5 py-15 sm:py-20";
+/** The page's left and right edge — 1140px cap, 20px gutter, measured off the
+ *  marcushutchins.com reference. Its own export because the nav needs this
+ *  half without the vertical rhythm below: one source for the edge means the
+ *  nav cannot drift out of line with the content under it. */
+export const pageWidth = "mx-auto w-full max-w-[71.25rem] px-5";
+
+/** Outer container for every section and grid — `pageWidth` plus the one
+ *  section rhythm (60px mobile, 80px desktop), so no page repeats the numbers. */
+export const pageShell = cn(pageWidth, "py-15 sm:py-20");
 
 /** Cap for any block of running text — ~68ch at 20px, the width past which a
  *  line gets hard to track back to its start. */

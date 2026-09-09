@@ -18,7 +18,9 @@ export default function Skills({ id = "skills" }: { id?: string }) {
         Tech stack
       </h2>
 
-      <div className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
+      {/* Three columns at lg: five groups fill 3+2 across the 1140px shell,
+          where two columns left each one ~550px of mostly trailing whitespace. */}
+      <div className="grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
         {Object.entries(skills.technologies).map(([group, items]) => (
           <div key={group}>
             <p className="mb-3 text-sm font-medium text-fg">{group}</p>
