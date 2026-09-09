@@ -13,27 +13,6 @@ export const profile: Profile = {
   email: "singhsokhiarvinder@gmail.com",
   emailSubject: "Opportunity — via your portfolio",
   resumePath: "/assets/arvinder-singh-sokhi-resume.pdf",
-  shortBio: [
-    "I’m a full-stack engineer who loves the sweet spot where creative frontend craftsmanship meets deeply optimized system design. Most of my work lives across TypeScript—designing fluid, expressive user experiences in React and Next.js, paired with fast, resilient Node and Postgres architectures behind the scenes.",
-    "On the frontend, I care about the details that make an app feel alive: snappy transitions, clean layout hierarchy, and seamless accessibility. On the backend, I’m drawn to performance—optimizing queries, cutting out bottlenecks, and setting up reliable infrastructure to keep things running smooth.",
-    "As a collaborator, I keep things grounded. I favor simple, effective solutions over over-engineering, communicate clearly, and take genuine pride in helping a team deliver software that users genuinely enjoy using.",
-  ],
-  // TODO(you): these two arrays are the personality of the About block. Real
-  // specifics beat tasteful vagueness — "Designing Data-Intensive Applications"
-  // says more than "technical books".
-  currently: [
-    {
-      label: "Building",
-      value: "This portfolio, and a match tracker for a college league",
-      icon: "hammer",
-    },
-    {
-      label: "Reading",
-      value: "Designing Data-Intensive Applications",
-      icon: "book",
-    },
-    { label: "Learning", value: "Rust — slowly, and badly", icon: "graduation-cap" },
-  ],
   // TODO(you): the hero cycles these under your name, one every few seconds.
   // Keep them short and specific — "AI Enthusiast" says nothing, "Ships on
   // Fridays" says something.
@@ -51,13 +30,6 @@ export const profile: Profile = {
     pitch: "Static export on Cloudflare Workers. 882ms LCP, 0.00 CLS.",
     cta: "View source",
   },
-  interests: [
-    { label: "Chess", icon: "puzzle" },
-    { label: "Filter coffee", icon: "coffee" },
-    { label: "Long rides", icon: "bike" },
-    { label: "Sci-fi", icon: "film" },
-    { label: "Playlists nobody asked for", icon: "music" },
-  ],
   socials: [
     { label: "GitHub", href: "https://github.com/assokhi", icon: "github" },
     {

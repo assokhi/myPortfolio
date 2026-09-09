@@ -11,8 +11,7 @@
     "deploy": "wrangler deploy",
     "lint": "eslint",
     "check:apis": "node scripts/check-apis.ts",
-    "typecheck": "tsc --noEmit",
-    "check:bento": "node scripts/check-bento.ts"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "clsx": "^2.1.1",

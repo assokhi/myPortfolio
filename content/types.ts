@@ -7,20 +7,6 @@ export type Social = {
   icon: "github" | "linkedin" | "mail" | "instagram";
 };
 
-/** Icon keys resolved in components/sections/About.tsx. Add a key there and
- *  here together, or TypeScript will not let the content file compile. */
-export type AboutIcon =
-  | "hammer"
-  | "book"
-  | "graduation-cap"
-  | "coffee"
-  | "music"
-  | "bike"
-  | "camera"
-  | "puzzle"
-  | "film"
-  | "map-pin";
-
 export type Profile = {
   name: string;
   /** The job title you want, in plain words. Not "passionate innovator". */
@@ -40,14 +26,6 @@ export type Profile = {
   /** Path under public/ for the footer avatar, e.g. "/avatar.jpg". Omit it and
    *  the footer draws a monogram instead, which is why it stays optional. */
   avatar?: string;
-  /** 3-4 sentences. The first two run in the home About block; /about runs
-   *  all of them. Keep the first two the ones that stand alone. */
-  shortBio: string[];
-  /** What you are actually doing right now. Dated by nature — three rows is
-   *  the most anyone reads, and a stale one is worse than none. */
-  currently: { label: string; value: string; icon: AboutIcon }[];
-  /** The non-work half. Short labels, not sentences. */
-  interests: { label: string; icon: AboutIcon }[];
   /** Short phrases the hero cycles through under your name. Three to five is
    *  the range: fewer reads as a typo, more and nobody waits for the loop. */
   taglines: string[];
@@ -196,9 +174,6 @@ export type Project = {
   /** Path under public/ to the project's own mark — wins over `logo` when
    *  both are set, same precedence as CardLogo's image/brand/monogram order. */
   image?: string;
-  /** Screenshots under public/, newest first. Written by the weekly Playwright
-   *  workflow in .github/workflows/, not by hand. */
-  shots?: string[];
   /** Source, when it is public. */
   repo?: string;
   /** "wip" shows an "In progress" badge instead of implying a finished,

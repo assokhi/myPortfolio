@@ -24,7 +24,7 @@ export default async function Home() {
       <GithubActivity />
       <Education />
       <Skills />
-      <Projects limit={2} />
+      <Projects limit={3} />
       <HomeBlogCards posts={posts} />
 
       {/* Rendered only when there is a post to point at, so the toast can

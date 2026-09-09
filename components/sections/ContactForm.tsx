@@ -70,30 +70,32 @@ export default function ContactForm() {
         />
       ) : null}
 
-      <form onSubmit={onSubmit} className="mt-8 max-w-xl space-y-4">
-        <div>
-          <label htmlFor="name" className="mb-1.5 block text-sm font-medium text-fg">
-            Name
-          </label>
-          <input id="name" name="name" required autoComplete="name" className={fieldClass} />
+      <form onSubmit={onSubmit} className="mt-6 max-w-xl space-y-3">
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div>
+            <label htmlFor="name" className="mb-1 block text-sm font-medium text-fg">
+              Name
+            </label>
+            <input id="name" name="name" required autoComplete="name" className={fieldClass} />
+          </div>
+
+          <div>
+            <label htmlFor="email" className="mb-1 block text-sm font-medium text-fg">
+              Email
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              required
+              autoComplete="email"
+              className={fieldClass}
+            />
+          </div>
         </div>
 
         <div>
-          <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-fg">
-            Email
-          </label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            required
-            autoComplete="email"
-            className={fieldClass}
-          />
-        </div>
-
-        <div>
-          <label htmlFor="subject" className="mb-1.5 block text-sm font-medium text-fg">
+          <label htmlFor="subject" className="mb-1 block text-sm font-medium text-fg">
             Subject
           </label>
           {/* A native <select>. It is keyboard operable, screen-reader correct
@@ -109,14 +111,14 @@ export default function ContactForm() {
         </div>
 
         <div>
-          <label htmlFor="message" className="mb-1.5 block text-sm font-medium text-fg">
+          <label htmlFor="message" className="mb-1 block text-sm font-medium text-fg">
             Message
           </label>
           <textarea
             id="message"
             name="message"
             required
-            rows={6}
+            rows={4}
             className={`${fieldClass} resize-y`}
           />
         </div>

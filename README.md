@@ -22,7 +22,6 @@ now. Use `npm run preview` to exercise the deployed shape.
 npm run build        # must pass with zero TypeScript errors
 npm run typecheck    # types only (run `next build` once first — it generates route types)
 npm run lint
-npm run check:bento
 
 # all five endpoints, against `npm run preview` in another terminal
 CHECK_BASE_URL=http://127.0.0.1:8787 npm run check:apis
@@ -139,7 +138,7 @@ array, never a component.
 
 | File | What it feeds |
 |---|---|
-| `content/profile.ts` | Hero, About, Contact, Footer, all metadata |
+| `content/profile.ts` | Hero, Contact, Footer, and site metadata |
 | `content/experience.ts` | Experience section and `/experience` |
 | `content/skills.ts` | Skills section and `/skills` |
 | `content/education.ts` | Education section and `/education` |
@@ -148,16 +147,31 @@ array, never a component.
 
 Every file seeded with example data carries a `TODO(you)` comment.
 
-## Structure
+## Project structure
 
-- `app/(sections)/` — route group; the five detail pages share a layout and
-  `(sections)` never appears in a URL.
-- `app/api/` — four route handlers, thin wrappers over `lib/stats.ts`, exported
-  as static JSON (`export const dynamic = "force-static"`).
-- `worker.ts` + `wrangler.jsonc` — the Cloudflare Worker: `/api/visitors` and
-  the Static Assets binding. The only server-side code that runs in production.
-- `lib/stats.ts` — the data layer. Server components call it directly rather
-  than fetching their own API over HTTP.
-- `components/sections/` — the page sections.
-- `components/ui/` — components pasted from 21st.dev / Aceternity, owned in
-  place. No wrapper layer over them.
+```text
+app/                  Routes, metadata, and build-time API handlers
+components/sections/  Page features such as Hero, Projects, Contact, and Blog
+components/ui/        Reusable presentation and interaction primitives
+content/              Typed portfolio data
+content/blog/         One MDX file per post
+lib/                  Shared utilities, data access, validation, and hooks
+public/               Browser assets referenced from content/
+scripts/              Local verification scripts run through npm
+db/                   Optional D1 schema
+.github/workflows/    Scheduled deployment refresh
+worker.ts             Runtime Worker endpoints and static-asset fallback
+```
+
+Keep a change in the narrowest matching folder: update `content/` for portfolio
+data, `components/sections/` for a page feature, and `components/ui/` only
+for functionality reused across features.
+
+## Runtime architecture
+
+- `app/api/` generates static build-time JSON for the public coding-profile
+  stats used by the activity section.
+- `worker.ts` and `wrangler.jsonc` implement the runtime endpoints
+  (visitors, blog views, contact, and newsletter) and serve the static export.
+- `lib/stats.ts` is the shared data layer used by the activity components and
+  the static API handlers.
