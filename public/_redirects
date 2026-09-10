@@ -1,7 +1,0 @@
-# The rebuild replaced /about, /experience and /skills with /work and
-# /projects. These pages were live and indexed, so the old URLs are redirected
-# rather than left to 404 — a 301 passes their search ranking to the new page
-# and keeps any link already out in the world working.
-/about       /            301
-/experience  /work        301
-/skills      /            301
