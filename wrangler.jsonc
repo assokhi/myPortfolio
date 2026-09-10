@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "portfolio",
+  "name": "myportfolio",
   "compatibility_date": "2026-09-07",
   // Assets-only Worker: no main, no script, no bindings. Every request is a
   // file in out/ and never counts as a Worker invocation.
